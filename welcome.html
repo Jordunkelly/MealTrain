@@ -105,6 +105,47 @@
 
   @media (prefers-reduced-motion:reduce){
     .star,.bob,.bob2,.blink,.rolling,.pop,.fact.secret,.panel.secret-glow,.hero.secretpop svg,.crown.show{animation:none}}
+
+  /* ===== COLLECTION ===== */
+  .collection-panel{margin-top:4px}
+  .coll-row{display:flex;align-items:center;gap:8px;margin:8px 0}
+  .coll-label{font-size:8px;min-width:64px;color:var(--accent2)}
+  .coll-bar{flex:1;height:14px;background:#0a1230;border:2px solid var(--accent);border-radius:3px;overflow:hidden}
+  .coll-fill{height:100%;width:0%;background:var(--gold);transition:width .5s ease}
+  .coll-fill.ev{background:var(--ev)} .coll-fill.el{background:var(--el)}
+  .coll-num{font-size:7px;min-width:46px;text-align:right;color:var(--accent2)}
+  .coll-secret{font-size:8px;text-align:center;color:var(--gold);margin:10px 0 12px;text-shadow:1px 1px 0 #000}
+  .coll-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .btn.small{font-size:8px;padding:8px 12px}
+  .btn.reset{background:#e26a98;color:#fff}
+  .btn.reset:hover{background:#f48fb1}
+  .coll-saved{font-size:6px;color:var(--accent);opacity:.7;text-align:center;margin-top:10px}
+  .complete-glow{animation:panelglow 1.4s steps(2) infinite}
+
+  /* ===== MODAL ===== */
+  .modal-bg{position:fixed;inset:0;background:rgba(6,10,28,.86);z-index:100;
+    display:none;align-items:center;justify-content:center;padding:16px}
+  .modal-bg.open{display:flex}
+  .modal{background:var(--panel);border:4px solid var(--ink-line);box-shadow:inset 0 0 0 2px var(--accent),0 0 30px #000;
+    width:100%;max-width:560px;max-height:86vh;display:flex;flex-direction:column;border-radius:4px}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;
+    border-bottom:2px solid var(--accent);font-size:11px;color:var(--gold)}
+  .modal-x{background:none;border:2px solid var(--accent2);color:var(--accent2);font-family:inherit;
+    font-size:10px;width:26px;height:26px;cursor:pointer;border-radius:3px}
+  .modal-x:hover{background:var(--accent2);color:#0c1430}
+  .modal-tabs{display:flex;gap:6px;padding:10px 16px 0}
+  .tab{flex:1;font-family:inherit;font-size:8px;padding:9px 4px;cursor:pointer;color:var(--accent2);
+    background:#0a1230;border:2px solid var(--accent);border-bottom:none;border-radius:3px 3px 0 0}
+  .tab.active{background:var(--panel2);color:var(--gold)}
+  .modal-body{overflow-y:auto;padding:12px 16px 18px;display:flex;flex-direction:column;gap:7px}
+  .ci{font-size:8px;line-height:1.7;padding:8px 10px;border-radius:3px;border:2px solid #1a2a5a;
+    background:#0e1838;color:#3a4a78}
+  .ci.found{color:var(--accent2);border-color:var(--accent)}
+  .ci.found.sec{color:#5a3a00;background:#fff6d0;border-color:#b8860b}
+  .ci .chk{color:var(--green);margin-right:6px}
+  .ci.locked .chk{color:#3a4a78}
+
+  @media (prefers-reduced-motion:reduce){.coll-fill{transition:none}.complete-glow{animation:none}}
 </style>
 </head>
 <body>
@@ -210,6 +251,46 @@
         <button class="btn" id="rollbtn">🎲 ROLL FOR POSITIVITY</button>
         <div class="count" id="count">Rolls: 0</div>
       </div>
+    </div>
+
+    <div class="panel collection-panel">
+      <div class="questline">📜 ADVENTURER'S COLLECTION 📜</div>
+      <div class="coll-row">
+        <span class="coll-label">🎲 Facts</span>
+        <div class="coll-bar"><div class="coll-fill" id="fill-facts"></div></div>
+        <span class="coll-num" id="num-facts">0/0</span>
+      </div>
+      <div class="coll-row">
+        <span class="coll-label" style="color:var(--ev)">👑 Everly</span>
+        <div class="coll-bar"><div class="coll-fill ev" id="fill-ev"></div></div>
+        <span class="coll-num" id="num-ev">0/0</span>
+      </div>
+      <div class="coll-row">
+        <span class="coll-label" style="color:var(--el)">🏹 Eldon</span>
+        <div class="coll-bar"><div class="coll-fill el" id="fill-el"></div></div>
+        <span class="coll-num" id="num-el">0/0</span>
+      </div>
+      <div class="coll-secret" id="coll-secret">✨ Secrets found: 0/25 ✨</div>
+      <div class="coll-controls">
+        <button class="btn small" id="viewcoll">📖 VIEW COLLECTION</button>
+        <button class="btn small reset" id="resetcoll">🗑 RESET</button>
+      </div>
+      <div class="coll-saved">Your progress saves automatically on this device.</div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modal">
+    <div class="modal">
+      <div class="modal-head">
+        <span id="modal-title">📖 My Collection</span>
+        <button class="modal-x" id="modal-x" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-tabs">
+        <button class="tab active" data-tab="facts">🎲 Facts</button>
+        <button class="tab" data-tab="ev">👑 Everly</button>
+        <button class="tab" data-tab="el">🏹 Eldon</button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
     </div>
   </div>
 
@@ -328,7 +409,67 @@
       "[[SECRET]]Eldon's mom's garden is said to grow faster than any other in Pennsylvania. Magic in her green thumbs!",
       "Babies dream a LOT. Half their sleep is dream time. Tiny adventures!",
       "The chocolate-chip cookie of states? Pennsylvania, home of sweet treats!",
-      "[[SECRET]]The healer mother mends the tiniest patients by day, then comes home to her star child Everly by night."
+      "[[SECRET]]The healer mother mends the tiniest patients by day, then comes home to her star child Everly by night.",
+      "A baby's brain doubles in size in the first year. Tiny supercomputer booting up!",
+      "Newborns can't see color well at first. The world loads in slowly, like an old game.",
+      "Babies are born with a sweet tooth and reject bitter foods. Smart little gamers!",
+      "A baby's heart beats up to 160 times a minute. Drummer of the family!",
+      "Newborns sleep up to 17 hours a day. Ultimate AFK champions.",
+      "Babies recognize music they heard in the womb. Pre-loaded playlists!",
+      "A baby can drink a quarter of its body weight in milk a day. Speedrun snacking!",
+      "Newborns have a reflex to grab anything that touches their palm. Loot collectors!",
+      "Babies cry without tears for weeks, then unlock the waterworks. DLC update!",
+      "A baby learns your face before almost anything else. You're the main character!",
+      "Newborns can feel you smiling through your voice. Charisma boost incoming!",
+      "Babies practice crying faces in the womb. Rehearsing for the big debut!",
+      "A baby's first laugh usually comes around 3 months. Achievement unlocked!",
+      "Pennsylvania is home to the oldest continuously running farmers market in the US.",
+      "Hershey, PA was literally built around a chocolate factory. Sweetest village ever!",
+      "Pennsylvania grows almost half of America's mushrooms. Fungi kingdom!",
+      "The Hershey's Kiss got its name from the 'kiss' sound the machine makes. Smooch!",
+      "Pennsylvania's Pymatuning Spillway has so many fish the ducks walk on them!",
+      "Centralia, PA has had an underground coal fire burning since 1962. Spooky quest!",
+      "Pennsylvania has 121 state parks, all free to enter. Open-world exploring!",
+      "The ice cream sundae may have been invented in Pennsylvania. Sweet legend!",
+      "Pennsylvania's elk herd is the largest in the northeastern US. Majestic bois!",
+      "Punxsutawney Phil has an official 'wife' groundhog named Phyllis. Aww!",
+      "Pennsylvania made the first auto service station in the world. Vroom history!",
+      "The Pennsylvania state fossil is a trilobite. Ancient little armored bug!",
+      "Bubble gum was invented in Philadelphia, PA. Pop and chew, adventurer!",
+      "Pennsylvania has more roads than almost any state. Everly's dad would be proud!",
+      "Little League baseball was founded in Williamsport, Pennsylvania. Play ball!",
+      "Pennsylvania's groundhogs can sleep through winter for 5 whole months. Mega nap!",
+      "A deer's antlers can grow up to an inch a day. Fastest-growing tissue around!",
+      "Honeybees beat their wings 200 times a second. Tiny farm helicopters!",
+      "A single cornstalk can have 800 kernels on one ear. Farm jackpot!",
+      "Cows can walk upstairs but not down. Funny farm fact!",
+      "A pig can run a 7-minute mile. Faster than you'd think, farmer!",
+      "Chickens can remember over 100 different faces. Sharp barnyard memory!",
+      "A farmer's scarecrow tradition is over 3,000 years old. Ancient quest item!",
+      "Goats have rectangular pupils, so they can see almost all around. 360 vision!",
+      "One cow makes enough milk for 24 people a day. Dairy hero!",
+      "Soil holds more carbon than all the world's plants and air combined. Save the dirt!",
+      "A barn owl can hear a mouse's heartbeat. Night-vision predator!",
+      "Farmers in Kim's family rise with the rooster. Dawn is the real boss battle!",
+      "The name Kelly means 'bright-headed' and 'warrior.' A name made for legends!",
+      "A controller has more computing power than the rockets that went to the moon!",
+      "The first video game was made in 1958. Pong came later and changed everything!",
+      "Save points exist in games because the best heroes know when to rest. Wise!",
+      "In old RPGs, grinding XP meant patience. Just like farming. And parenting!",
+      "The most important stat in any party isn't strength. It's teamwork. Always.",
+      "A 'critical hit' is rare and powerful. Like a good nap with a clean diaper!",
+      "Co-op mode is the best mode. Everything's better with your party. Family!",
+      "Every great RPG starts in a small village. Yours starts in Penn's Woods!",
+      "The rarest loot in any game is the people who love you. You found the jackpot!",
+      "Boss music exists to make you feel brave. Hum it during diaper changes!",
+      "Side quests are where the real fun hides. Go explore, little adventurer!",
+      "Leveling up isn't about being the strongest. It's about who you become. Aww!",
+      "A deer can leap a 7-foot fence from a standstill. Forest parkour champion!",
+      "Pennsylvania winters can dump over 100 inches of snow up north. Snow fort raid!",
+      "Baby giggles register on the same brain scans as winning a prize. Pure joy!",
+      "A newborn's grip can hold their whole weight. Tiny rock climber stats!",
+      "Maple syrup season in PA starts when days warm and nights still freeze. Sweet!",
+      "Fireflies light up Pennsylvania summers like nature's own pixel particles!"
     ];
     var evLines = [
       "Hi, I'm Everly! Twirl with me, but DON'T mention diapers!",
@@ -430,9 +571,99 @@
       "[[SECRET]]My daddy is the KING of trucks and safety. Nobody bosses the highways like him!",
       "[[SECRET]]We live in Shippensburg. It's the prettiest village in all of Penn's Woods!",
       "[[SECRET]]Secret: I was born June 9th, 2026. That makes me the OLDEST. By four whole days. Respect!",
-      "[[SECRET]]Mommy keeps all the little kids healthy. Then she comes home to her princess. Me!"
+      "[[SECRET]]Mommy keeps all the little kids healthy. Then she comes home to her princess. Me!",
+      "I respawned from my nap fabulous AND furious. Banshee mode: ON!",
+      "I refuse to poop. It's not in my character build. I'm pure charisma!",
+      "EEEEEEE! That scream was a critical hit. 9,999 sparkle damage!",
+      "I'm the princess class: high glam, high volume, zero potty.",
+      "My tiara is legendary loot. Do NOT touch it, peasant.",
+      "I screamed so loud I paused Daddy's video game. Power move!",
+      "Pooping? In THIS outfit? Absolutely not. Hard pass.",
+      "I twirled into a glitter tornado and won the boss fight. Flawless!",
+      "My banshee wail has its own boss music. Bow down!",
+      "I hoarded all the pink toys like rare drops. Mine. All mine!",
+      "I cried because my bow was crooked. Tragedy! Drama queen achievement!",
+      "I out-screamed the vacuum. Final boss defeated.",
+      "No poops today. I'm grinding the 'fabulous' skill tree instead.",
+      "I sparkled so hard I blinded a deer. It's an honor, deer.",
+      "I demand to be carried like royalty. Walking is for NPCs.",
+      "My scream unlocked a secret level. It's called 'bedtime chaos.'",
+      "I refuse the potty quest. I decline. Quest abandoned forever!",
+      "I'm a glittery tank: high defense, full sparkle, never poops.",
+      "I screamed, Eldon dropped his controller. Teamwork? Nope. Domination!",
+      "My pout does 5,000 guilt damage. Super effective on Daddy!",
+      "I collected 10 hair bows like a true loot goblin. Pretty hoard!",
+      "I twirled past Kim's farmer family and they all clapped. Iconic!",
+      "Banshee combo: scream, sparkle, refuse diaper. Triple finisher!",
+      "I'm too pretty to poop. It's a confirmed stat. (It is not.)",
+      "I screamed at bath time, then refused to leave. Make it make sense!",
+      "My dress has more sparkles than the night sky. I counted. Twice.",
+      "I rage-quit the high chair. The food was NOT fabulous enough.",
+      "I demand a glitter throne and a pink dragon mount. Now, please!",
+      "My scream echoed across Penn's Woods. The forest knows my name!",
+      "I refuse to nap, then pass out mid-twirl. Dramatic exit!",
+      "I'm the rarest princess loot in the whole Kelly kingdom!",
+      "I screamed with joy AND rage at the same time. Multiclassing!",
+      "Pooping is a peasant quest. I only do royal activities. Hmph!",
+      "I booped Eldon's nose and screamed. He cried. Victory dance!",
+      "My banshee wail leveled up. New ability: shatter naptime!",
+      "I wore three crowns to assert dominance. One is for napping.",
+      "I refuse to be changed. I prefer to remain mysteriously regal.",
+      "I sparkled at the Packers game and stole the whole show. Go Pack... ME!",
+      "I screamed, twirled, and refused the potty. Perfect run. No deaths!",
+      "I love you to the sparkliest boss castle and back, brave hero!"
     ];
     var elLines = [
+      "I respawned from my nap with full HP and an empty diaper bar. Time to refill it!",
+      "My poop did 9,999 damage to Dad's nose. Critical hit!",
+      "I'm grinding the 'sit up' skill tree. Currently level 1. Wobbling.",
+      "Diaper blowout = boss fight. Dad lost. I am the final boss.",
+      "I mashed every button on the controller and somehow paused Dad's game. Pro gamer baby!",
+      "Mom says Kim's whole family are farmers. So I come from a long line of legends!",
+      "I tooted and called it my 'special attack.' Super effective!",
+      "I drooled on the controller. It's a wireless mess now. GG.",
+      "Loading my nap... loading... loading... NOPE. Quest abandoned!",
+      "I ate Grandpa's farm dirt. Tastes like the family bloodline. Mmm, heritage!",
+      "My burp combo hit a 3x multiplier. New high score!",
+      "I cried until someone handed me the TV remote. Negotiation: won.",
+      "Kim's family grows everything. Me? I grow diapers. Full ones.",
+      "I'm a tank class: high defense, slow movement, leaks everywhere.",
+      "I spit up right on the 'New Game' screen. Off to a great start!",
+      "I pulled a stealth poop during co-op snuggles. Sneak attack!",
+      "Every farmer in Kim's family woke at dawn. So did I. To scream.",
+      "I rage-quit tummy time after 4 seconds. Too hard. 0 stars.",
+      "My diaper is a status effect: 'Poisoned.' Everyone's affected.",
+      "I beat Dad at staring contests. He blinked. I drooled. Victory!",
+      "I farmed XP all night by not sleeping. Mom did NOT get the loot.",
+      "I chewed the game cartridge. It's saved now. In my mouth.",
+      "Kim's family harvests crops. I harvest snacks off the floor.",
+      "I unlocked a new skill: throwing food off the high chair. AOE attack!",
+      "I pooped during the cutscene. Couldn't skip it. Sorry, party.",
+      "My drool meter is full. Releasing it now. Splash damage!",
+      "I'm the DLC the family didn't know they needed. Surprise content!",
+      "I crawled three feet then forgot the mission. Side quest failed.",
+      "Tractor go vroom = my favorite RPG mount. Kim's family approved!",
+      "I spit out broccoli and gained the 'Picky Eater' achievement.",
+      "I cried, leveled up my lungs, and unlocked 'Banshee Brother.' Like Everly!",
+      "My nap is on a 4-hour cooldown. And I refuse to use it.",
+      "I farmed in the dirt like Kim's family, then ate the harvest. Raw. Mud.",
+      "I clutched the bottle like it was a legendary drop. Mine. MINE.",
+      "I pooped, drooled, AND spit up. Triple combo finisher! Flawless victory!",
+      "Mom's whole crew are farmers. I'm just here doing farmer cardio: screaming.",
+      "I pressed start on bath time, then immediately pressed escape.",
+      "I gnawed the wooden spoon like a true farm-bred warrior. Heritage tastes good!",
+      "My diaper change has a quick-time event. I never let Dad win it.",
+      "I'm collecting drool stains like trading cards. Got a rare one today!",
+      "Kim's family plants seeds. I plant... surprises. In my pants.",
+      "I aggroed the dog with one giggle. Now he follows me everywhere. Pet acquired!",
+      "I fell asleep holding a toy tractor. Even my dreams are farmer-coded.",
+      "I respawned three times during one nap. Death by hiccup.",
+      "I dropped my pacifier off the high chair 11 times. Endless quest!",
+      "My poops are limited-edition. Each one rarer and smellier than the last.",
+      "I'm speedrunning teething. Current strategy: chew everything, cry often.",
+      "Kim's family are farming legends. I'm the chosen one. Of chaos.",
+      "I booped the cat, screamed with joy, then pooped. Best combo all week!",
+      "I main the 'baby' class. Overpowered. Please nerf. (No.)",
       "I pooped so loud the deer fled the forest. Warrior salute!",
       "I drooled a river. Call it Lake Eldon. Population: slobber.",
       "I filled my diaper mid-nap and didn't even wake up. Pro move!",
@@ -478,61 +709,51 @@
       "I spit out medicine like a tiny dragon. No thank you, peasant!",
       "I pooped twice during one episode of farm cartoons. Encore!",
       "I gnawed on a wooden spoon like a true mountain warrior.",
-      "I cried, Everly screamed, Mom laughed, Dad hid. Family harmony!",
-      "I blew out my diaper on the tractor. Off-road warfare!",
-      "I drooled a slime trail across the whole living room floor.",
-      "I refused the spoon, then ate dirt off the floor. Standards: flexible.",
-      "I pooped right as Dad said 'he's finally clean.' Comedy timing!",
-      "Eldon here. A good warrior rises before the sun, like a farmer.",
-      "I tracked a buck through Penn's Woods today. Quiet as a shadow.",
-      "Live off the land, respect the forest, protect your people. Warrior's code!",
-      "My home is the forest. My armor is courage. Let's hunt, partner!",
-      "A farmer plants in spring and trusts the harvest. Patience is power.",
-      "I spotted deer tracks by the creek. The hunt begins at dawn!",
-      "Real strength is gentle. A warrior protects the small and the weak.",
-      "Chores at sunrise, hunt at dusk, campfire at night. Perfect day!",
-      "I built my own bow from forest wood. A true woodland warrior!",
-      "The deer are my teachers: stay calm, stay still, stay ready.",
-      "A wise farmer says: you reap what you sow. So sow kindness!",
-      "I can read the forest like a map. Every leaf tells a story.",
-      "Strong back, soft heart. That's the warrior-farmer way.",
-      "I camped in the woods and woke to a deer watching me. Respect.",
-      "A good hunter takes only what's needed and thanks the forest.",
-      "Mud on my boots means I worked the land today. Honest dirt!",
-      "I sharpened my hunting knife by the fire. Always be prepared.",
-      "The old farmer told me: tend the soil and it will tend you.",
-      "I followed a deer trail deep into Penn's Woods. Adventure!",
-      "A warrior trains every day. Today I chopped wood AND ran the fields.",
-      "Living in the forest means the owls are my neighbors. Hoo hoo!",
-      "I planted corn this morning and tracked deer this evening. Balance!",
-      "The best hunters move like the wind. Silent and patient.",
-      "A farmer's hands are rough from work and gentle with the animals.",
-      "I made a shelter from branches in the woods. Forest warrior, certified!",
-      "Respect the deer, respect the land, respect your family. Triple oath!",
-      "I rose at 4am to feed the herd. A warrior keeps his word.",
-      "The forest gives if you ask kindly. Berries, wood, and peace.",
-      "I read deer tracks in the mud like a treasure map. X marks the buck!",
-      "Sweat on the field today, stars over the woods tonight. Good life.",
-      "A true farmer never wastes a thing. Every scrap has a purpose.",
-      "I sat so still a deer walked right past me. Stealth level: master.",
-      "Strength is for carrying the harvest AND lifting up your friends.",
-      "I learned to whittle by the campfire. Forest skills unlocked!",
-      "The land is my kingdom, the forest my castle. Defend it well!",
-      "A farmer trusts the seasons. Winter rests, spring wakes. Patience.",
-      "I tracked a deer over the ridge at dawn. The forest was glowing.",
-      "My boots are muddy, my aim is true, my heart is loyal. Warrior!",
-      "Plant, hunt, build, protect. The four quests of a forest warrior.",
-      "I sharpened my axe and split a winter's worth of wood. Hut, hut!",
-      "Old farmer wisdom: rise early, work hard, sleep well. Repeat!",
-      "I spotted a 10-point buck and just admired him. Respect the legend.",
-      "A warrior shares his catch. Nobody in our forest goes hungry.",
-      "I built a deer blind from branches. Camouflage achievement!",
-      "The forest floor is alive with billions of tiny creatures. Wow!",
       "[[SECRET]]Psst... my mom is a farmer's daughter who does FIVE THOUSAND projects a day. Unstoppable!",
       "[[SECRET]]My dad's an engineer AND the greatest deer slayer in all of Dillsburg's 20 secret acres.",
       "[[SECRET]]Secret: I was born June 13th, 2026. Four days after Everly. The forest welcomed me!",
       "[[SECRET]]My mom can garden, cook, clean, and build all at once. Stay-at-home QUEEN!",
-      "[[SECRET]]In our Dillsburg woods, no buck is safe from my engineer-hunter dad. Legend!"
+      "[[SECRET]]In our Dillsburg woods, no buck is safe from my engineer-hunter dad. Legend!",
+      "I pooped mid-boss-fight and Dad lost the controller. We both lost.",
+      "My diaper blowout was an AOE attack. Cleared the whole room!",
+      "I'm grinding teething XP. Strategy: chew Dad's TV remote.",
+      "I drooled on the save file. It's autosaved now. In slobber.",
+      "My fart had a 4x combo multiplier. New family record!",
+      "I farmed the floor for snacks like Kim's family farms crops. Heritage!",
+      "I rage-quit tummy time. Too hard. Refund my nap, please.",
+      "I main the 'baby' class. Unkillable. Constantly leaking. Balanced? No.",
+      "My poop did fall damage to Dad's nose. Brutal hit!",
+      "I crawled two feet, forgot the quest, and ate a sock. Side quest!",
+      "I respawned from my nap with a full diaper bar. Time to empty it!",
+      "Kim's family grows corn. I grow surprises. Pungent ones.",
+      "I clutched the bottle like legendary loot. Do not steal my treasure!",
+      "I mashed every button and somehow ordered Dad a new tractor. Oops!",
+      "My burp echoed off the barn. The cows gave a standing ovation.",
+      "I spit up in a perfect arc. Olympic distance, frankly impressive.",
+      "I dropped my pacifier 14 times. Endless fetch quest for Mom!",
+      "Diaper change = quick-time event. I never let Dad win it.",
+      "I aggroed the farm dog with one giggle. Loyal companion acquired!",
+      "I ate Grandpa's dirt. Tastes like the Kelly-farmer bloodline. Yum!",
+      "I pooped during the cutscene. Couldn't skip it. Sorry, party.",
+      "My nap has a 4-hour cooldown and I refuse to cast it.",
+      "I'm the DLC this family didn't know they needed. Surprise content!",
+      "I gnawed a wooden spoon like a true farm-warrior. Tastes legendary!",
+      "I screamed because Everly screamed. Co-op banshee mode unlocked!",
+      "I tooted on the tractor and blamed the dog. Crime: committed.",
+      "My drool meter overflowed. Splash damage to the whole couch!",
+      "I farmed XP all night by not sleeping. Mom got zero loot. Sorry, Mom!",
+      "I chewed the game cartridge. It's saved now. Permanently. In me.",
+      "I pulled a stealth poop during snuggles. Sneak attack landed!",
+      "I'm a tank class: high defense, slow crawl, leaks from all sides.",
+      "I booped the cat, screamed with joy, then pooped. Triple combo!",
+      "I fell asleep clutching a toy tractor. Farmer-coded even in dreams.",
+      "My poops are limited edition. Each rarer and smellier than the last!",
+      "I beat Dad in a staring contest. He blinked, I drooled. Victory!",
+      "I farted so loud the deer left the forest. Stealth: ruined. Worth it!",
+      "Kim's whole family are farmers. I'm the chosen one... of chaos.",
+      "I threw food off the high chair. AOE splash. Dog approves!",
+      "I pooped, drooled, and spit up in one move. Flawless victory!",
+      "I love you to Lambeau Field and the cornfields and back, big sis!"
     ];
 
     var fact = document.getElementById('fact');
@@ -546,6 +767,54 @@
     var SECRET='[[SECRET]]';
     function isSecret(s){ return s.indexOf(SECRET)===0; }
     function clean(s){ return isSecret(s) ? s.slice(SECRET.length) : s; }
+
+    /* ===== COLLECTION (localStorage) ===== */
+    var STORE_KEY='everlyEldonCollection_v1';
+    var collected={facts:{},ev:{},el:{}};
+    var totals={facts:facts.length,ev:evLines.length,el:elLines.length};
+    var totalSecrets=0;
+    [facts,evLines,elLines].forEach(function(a){a.forEach(function(s){if(isSecret(s))totalSecrets++;});});
+
+    function loadCollection(){
+      try{
+        var raw=localStorage.getItem(STORE_KEY);
+        if(raw){var d=JSON.parse(raw);
+          collected.facts=d.facts||{};collected.ev=d.ev||{};collected.el=d.el||{};
+          rolls=d.rolls||0;
+        }
+      }catch(e){}
+    }
+    function saveCollection(){
+      try{localStorage.setItem(STORE_KEY,JSON.stringify({
+        facts:collected.facts,ev:collected.ev,el:collected.el,rolls:rolls
+      }));}catch(e){}
+    }
+    function countFound(cat){var n=0;for(var k in collected[cat])if(collected[cat][k])n++;return n;}
+    function countSecretsFound(){
+      var n=0;
+      [['facts',facts],['ev',evLines],['el',elLines]].forEach(function(pair){
+        var cat=pair[0],arr=pair[1];
+        for(var k in collected[cat]){ if(collected[cat][k] && isSecret(arr[+k])) n++; }
+      });
+      return n;
+    }
+    function pct(a,b){return b?Math.round(a/b*100):0;}
+    function updateCollectionUI(){
+      var fF=countFound('facts'),fE=countFound('ev'),fL=countFound('el');
+      document.getElementById('fill-facts').style.width=pct(fF,totals.facts)+'%';
+      document.getElementById('fill-ev').style.width=pct(fE,totals.ev)+'%';
+      document.getElementById('fill-el').style.width=pct(fL,totals.el)+'%';
+      document.getElementById('num-facts').textContent=fF+'/'+totals.facts;
+      document.getElementById('num-ev').textContent=fE+'/'+totals.ev;
+      document.getElementById('num-el').textContent=fL+'/'+totals.el;
+      document.getElementById('coll-secret').textContent='\u2728 Secrets found: '+countSecretsFound()+'/'+totalSecrets+' \u2728';
+      var allDone=(fF===totals.facts&&fE===totals.ev&&fL===totals.el);
+      document.querySelector('.collection-panel').classList.toggle('complete-glow',allDone);
+      if(allDone){document.querySelector('.collection-panel .questline').textContent='\uD83C\uDFC6 COLLECTION COMPLETE! \uD83C\uDFC6';}
+    }
+    function markFound(cat,idx){
+      if(!collected[cat][idx]){collected[cat][idx]=true;saveCollection();updateCollectionUI();}
+    }
 
     var sparkColors=['#ffe27a','#fff3b0','#ffd24a','#ffffff','#ffb86a'];
     function sparkleBurst(cx,cy,count){
@@ -598,6 +867,7 @@
           var face=1+Math.floor(Math.random()*5); showFace(face);
           var p=pick(facts);
           var secret=isSecret(p.v);
+          markFound('facts',p.i);
           if(secret){
             secretsFound++;
             fact.classList.add('secret');
@@ -616,7 +886,7 @@
     die.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();roll();}});
     die.setAttribute('tabindex','0');
 
-    function setupHero(heroId, sprId, bubId, crownId, lines){
+    function setupHero(heroId, sprId, bubId, crownId, lines, cat){
       var hero=document.getElementById(heroId);
       var spr=document.getElementById(sprId);
       var bub=document.getElementById(bubId);
@@ -625,6 +895,7 @@
       hero.addEventListener('click',function(){
         var p; do{p=Math.floor(Math.random()*lines.length);}while(lines.length>1&&p===li); li=p;
         var line=lines[p], secret=isSecret(line);
+        markFound(cat,p);
         bub.textContent=clean(line);
         bub.classList.toggle('secret', secret);
         bub.classList.add('show');
@@ -642,8 +913,57 @@
         }, secret?5200:4200);
       });
     }
-    setupHero('hero-ev','spr-ev','bub-ev','crown-ev',evLines);
-    setupHero('hero-el','spr-el','bub-el','crown-el',elLines);
+    setupHero('hero-ev','spr-ev','bub-ev','crown-ev',evLines,'ev');
+    setupHero('hero-el','spr-el','bub-el','crown-el',elLines,'el');
+
+    /* ===== MODAL / COLLECTION VIEWER ===== */
+    var modal=document.getElementById('modal');
+    var modalBody=document.getElementById('modal-body');
+    var modalTitle=document.getElementById('modal-title');
+    var dataMap={facts:{arr:facts,cat:'facts',title:'\uD83C\uDFB2 Fact Collection'},
+                 ev:{arr:evLines,cat:'ev',title:'\uD83D\uDC51 Everly\u2019s Sayings'},
+                 el:{arr:elLines,cat:'el',title:'\uD83C\uDFF9 Eldon\u2019s Sayings'}};
+    function renderTab(tab){
+      var d=dataMap[tab];
+      modalTitle.textContent=d.title;
+      var html='';
+      for(var i=0;i<d.arr.length;i++){
+        var found=!!collected[d.cat][i];
+        var sec=isSecret(d.arr[i]);
+        var cls='ci '+(found?'found':'locked')+(found&&sec?' sec':'');
+        var chk=found?'\u2714':'\u2610';
+        var txt=found?(sec?'\u2728 '+clean(d.arr[i]):clean(d.arr[i])):'??? Keep playing to unlock!';
+        html+='<div class="'+cls+'"><span class="chk">'+chk+'</span>'+txt+'</div>';
+      }
+      modalBody.innerHTML=html;
+    }
+    var tabs=document.querySelectorAll('.tab');
+    tabs.forEach(function(tb){tb.addEventListener('click',function(){
+      tabs.forEach(function(x){x.classList.remove('active');});
+      tb.classList.add('active'); renderTab(tb.getAttribute('data-tab'));
+    });});
+    function openModal(){var active=document.querySelector('.tab.active').getAttribute('data-tab');
+      renderTab(active); modal.classList.add('open');}
+    function closeModal(){modal.classList.remove('open');}
+    document.getElementById('viewcoll').addEventListener('click',openModal);
+    document.getElementById('modal-x').addEventListener('click',closeModal);
+    modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+    document.getElementById('resetcoll').addEventListener('click',function(){
+      if(confirm('Reset your whole collection? This cannot be undone!')){
+        collected={facts:{},ev:{},el:{}}; rolls=0;
+        countEl.textContent='Rolls: 0';
+        try{localStorage.removeItem(STORE_KEY);}catch(e){}
+        updateCollectionUI();
+        document.querySelector('.collection-panel .questline').textContent='\uD83D\uDCDC ADVENTURER\u2019S COLLECTION \uD83D\uDCDC';
+      }
+    });
+
+    /* ===== INIT ===== */
+    loadCollection();
+    countEl.textContent='Rolls: '+rolls;
+    updateCollectionUI();
   })();
   </script>
 </body>
