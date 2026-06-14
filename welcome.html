@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Everly and Eldon to Planet Earth</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c1430;--bg2:#101a44;--panel:#0e1838;--panel2:#14224a;
+    --ink-line:#ffffff;--accent:#5aa0f0;--accent2:#bfe0ff;
+    --ev:#f48fb1;--el:#7ad0ff;--gold:#ffe27a;--green:#7ae8b0;
+    --txt:#e8f0ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Press Start 2P',monospace;color:var(--txt);
+    background:radial-gradient(circle at 50% 0%,#16205a 0%,var(--bg) 70%);
+    min-height:100%;display:flex;flex-direction:column;align-items:center;
+    padding:24px 14px 60px;image-rendering:pixelated;overflow-x:hidden}
+
+  /* twinkle starfield */
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .star{position:absolute;width:3px;height:3px;background:#fff;animation:tw 1.8s steps(2) infinite}
+  @keyframes tw{0%,100%{opacity:1}50%{opacity:.2}}
+
+  .wrap{position:relative;z-index:1;width:100%;max-width:640px;display:flex;flex-direction:column;align-items:center;gap:22px}
+
+  h1{font-size:clamp(12px,3vw,18px);text-align:center;line-height:1.9;text-shadow:2px 2px 0 #000}
+  h1 .ev{color:var(--ev)} h1 .el{color:var(--el)}
+  .sub{font-size:8px;color:var(--gold);letter-spacing:2px;text-align:center;margin-top:6px}
+
+  /* hero sprites */
+  .heroes{display:flex;gap:48px;align-items:flex-end;justify-content:center}
+  .hero{display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;
+    background:none;border:none;font-family:inherit;color:var(--txt);
+    transition:transform .12s}
+  .hero:hover{transform:translateY(-4px)}
+  .hero:active{transform:translateY(2px)}
+  .hero svg{width:84px;height:auto;image-rendering:pixelated}
+  .hero .nm{font-size:9px}
+  .hero.ev .nm{color:var(--ev)} .hero.el .nm{color:var(--el)}
+  .hero .tap{font-size:6px;color:var(--accent);opacity:.7}
+  .bob{animation:bob 2.4s ease-in-out infinite}
+  .bob2{animation:bob 2.4s ease-in-out infinite .6s}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .blink{animation:blink 4s steps(1) infinite}
+  @keyframes blink{0%,92%,100%{opacity:1}94%,98%{opacity:0}}
+  .pop{animation:pop .5s ease}
+  @keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.18) rotate(-4deg)}100%{transform:scale(1)}}
+
+  /* speech bubble */
+  .bubble{position:relative;background:#fff;color:#1a2240;border:3px solid #1a2240;
+    border-radius:8px;padding:10px 12px;font-size:8px;line-height:1.7;max-width:200px;
+    opacity:0;transform:translateY(6px);transition:opacity .2s,transform .2s;pointer-events:none}
+  .bubble.show{opacity:1;transform:translateY(0)}
+  .bubble:after{content:"";position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+    border:6px solid transparent;border-top-color:#1a2240}
+
+  /* dialogue / dice panel */
+  .panel{width:100%;background:var(--panel);border:4px solid var(--ink-line);
+    box-shadow:inset 0 0 0 2px var(--accent);padding:20px 18px;border-radius:4px}
+  .questline{font-size:9px;color:var(--gold);text-align:center;margin-bottom:14px;line-height:1.8}
+
+  .fact{font-size:9px;line-height:2;color:var(--accent2);text-align:center;min-height:64px;
+    display:flex;align-items:center;justify-content:center;padding:4px 2px}
+  .fact .roll{color:var(--gold)}
+
+  .controls{display:flex;flex-direction:column;align-items:center;gap:12px;margin-top:8px}
+  .die{width:72px;height:72px;cursor:pointer;image-rendering:pixelated;
+    transition:transform .1s}
+  .die:hover{transform:scale(1.05)}
+  .rolling{animation:rollspin .6s steps(8)}
+  @keyframes rollspin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+  .btn{font-family:inherit;font-size:9px;color:#0c1430;background:var(--gold);
+    border:3px solid #fff;padding:10px 16px;cursor:pointer;border-radius:4px;
+    box-shadow:3px 3px 0 #00000055;transition:transform .08s}
+  .btn:hover{background:#fff3b0}
+  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #00000055}
+
+  .count{font-size:7px;color:var(--accent);opacity:.8}
+
+  @media (prefers-reduced-motion:reduce){
+    .star,.bob,.bob2,.blink,.rolling,.pop{animation:none}}
+</style>
+</head>
+<body>
+  <div class="stars" id="stars"></div>
+
+  <div class="wrap">
+    <div>
+      <h1>Welcome <span class="ev">EVERLY</span> &amp; <span class="el">ELDON</span></h1>
+      <div class="sub">★ TO PLANET EARTH ★</div>
+    </div>
+
+    <div class="heroes">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div class="bubble" id="bub-ev"></div>
+        <button class="hero ev" id="hero-ev" aria-label="Everly the hero">
+          <div class="bob" id="spr-ev">
+            <svg viewBox="0 0 32 40" shape-rendering="crispEdges">
+              <rect x="8" y="2" width="16" height="6" fill="#7a4a2a"/>
+              <rect x="6" y="6" width="20" height="8" fill="#7a4a2a"/>
+              <rect x="3" y="4" width="4" height="3" fill="#f06a9a"/>
+              <rect x="25" y="4" width="4" height="3" fill="#f06a9a"/>
+              <rect x="8" y="8" width="16" height="12" fill="#ffd9b8"/>
+              <rect x="8" y="8" width="16" height="3" fill="#7a4a2a"/>
+              <rect x="8" y="11" width="3" height="2" fill="#7a4a2a"/>
+              <rect x="21" y="11" width="3" height="2" fill="#7a4a2a"/>
+              <rect x="11" y="13" width="3" height="3" fill="#3a2a3a" class="blink"/>
+              <rect x="18" y="13" width="3" height="3" fill="#3a2a3a" class="blink"/>
+              <rect x="12" y="13" width="1" height="1" fill="#fff"/>
+              <rect x="19" y="13" width="1" height="1" fill="#fff"/>
+              <rect x="9" y="16" width="2" height="2" fill="#ffc0d4"/>
+              <rect x="21" y="16" width="2" height="2" fill="#ffc0d4"/>
+              <rect x="14" y="17" width="4" height="1" fill="#c25a7a"/>
+              <rect x="10" y="20" width="12" height="12" fill="#f06a9a"/>
+              <rect x="8" y="24" width="16" height="8" fill="#f06a9a"/>
+              <rect x="8" y="30" width="16" height="2" fill="#c2417a"/>
+              <rect x="6" y="22" width="3" height="7" fill="#ffd9b8"/>
+              <rect x="23" y="22" width="3" height="7" fill="#ffd9b8"/>
+              <rect x="11" y="32" width="3" height="5" fill="#ffd9b8"/>
+              <rect x="18" y="32" width="3" height="5" fill="#ffd9b8"/>
+              <rect x="10" y="37" width="5" height="2" fill="#c2417a"/>
+              <rect x="17" y="37" width="5" height="2" fill="#c2417a"/>
+            </svg>
+          </div>
+          <span class="nm">EVERLY</span>
+          <span class="tap">▶ tap me</span>
+        </button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div class="bubble" id="bub-el"></div>
+        <button class="hero el" id="hero-el" aria-label="Eldon the hero">
+          <div class="bob2" id="spr-el">
+            <svg viewBox="0 0 32 40" shape-rendering="crispEdges">
+              <rect x="8" y="3" width="16" height="6" fill="#3a5a8a"/>
+              <rect x="7" y="5" width="18" height="5" fill="#3a5a8a"/>
+              <rect x="14" y="2" width="4" height="2" fill="#3a5a8a"/>
+              <rect x="8" y="8" width="16" height="12" fill="#ffd9b8"/>
+              <rect x="8" y="8" width="16" height="2" fill="#3a5a8a"/>
+              <rect x="8" y="10" width="2" height="2" fill="#3a5a8a"/>
+              <rect x="22" y="10" width="2" height="2" fill="#3a5a8a"/>
+              <rect x="11" y="13" width="3" height="3" fill="#2a2a3a" class="blink"/>
+              <rect x="18" y="13" width="3" height="3" fill="#2a2a3a" class="blink"/>
+              <rect x="12" y="13" width="1" height="1" fill="#fff"/>
+              <rect x="19" y="13" width="1" height="1" fill="#fff"/>
+              <rect x="9" y="16" width="2" height="2" fill="#ffb0b0"/>
+              <rect x="21" y="16" width="2" height="2" fill="#ffb0b0"/>
+              <rect x="14" y="17" width="4" height="1" fill="#c25a7a"/>
+              <rect x="9" y="20" width="14" height="12" fill="#5a9ad0"/>
+              <rect x="9" y="20" width="14" height="2" fill="#fff" opacity=".4"/>
+              <rect x="12" y="22" width="2" height="8" fill="#3a6a9a"/>
+              <rect x="18" y="22" width="2" height="8" fill="#3a6a9a"/>
+              <rect x="14" y="24" width="4" height="3" fill="#ffe27a"/>
+              <rect x="6" y="22" width="3" height="7" fill="#ffd9b8"/>
+              <rect x="23" y="22" width="3" height="7" fill="#ffd9b8"/>
+              <rect x="11" y="32" width="3" height="5" fill="#ffd9b8"/>
+              <rect x="18" y="32" width="3" height="5" fill="#ffd9b8"/>
+              <rect x="10" y="37" width="5" height="2" fill="#3a6a9a"/>
+              <rect x="17" y="37" width="5" height="2" fill="#3a6a9a"/>
+            </svg>
+          </div>
+          <span class="nm">ELDON</span>
+          <span class="tap">▶ tap me</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="questline">✦ THE DICE OF DESTINY ✦</div>
+      <div class="fact" id="fact">Roll the die to reveal a fact of pure positivity...</div>
+      <div class="controls">
+        <svg class="die" id="die" viewBox="0 0 24 24" shape-rendering="crispEdges" role="button" aria-label="Roll the dice">
+          <rect x="3" y="3" width="18" height="18" fill="#ffe27a"/>
+          <rect x="3" y="3" width="18" height="18" fill="none" stroke="#0c1430" stroke-width="1"/>
+          <rect x="3" y="3" width="18" height="3" fill="#fff3b0"/>
+          <rect x="7" y="7" width="3" height="3" fill="#0c1430" id="d1"/>
+          <rect x="14" y="7" width="3" height="3" fill="#0c1430" id="d2"/>
+          <rect x="10.5" y="10.5" width="3" height="3" fill="#0c1430" id="d3"/>
+          <rect x="7" y="14" width="3" height="3" fill="#0c1430" id="d4"/>
+          <rect x="14" y="14" width="3" height="3" fill="#0c1430" id="d5"/>
+        </svg>
+        <button class="btn" id="rollbtn">🎲 ROLL FOR POSITIVITY</button>
+        <div class="count" id="count">Rolls: 0</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+  (function(){
+    var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // starfield
+    var sf = document.getElementById('stars');
+    for(var i=0;i<40;i++){
+      var s=document.createElement('div');
+      s.className='star';
+      s.style.left=Math.random()*100+'%';
+      s.style.top=Math.random()*100+'%';
+      s.style.animationDelay=(Math.random()*1.8)+'s';
+      sf.appendChild(s);
+    }
+
+    var facts = [
+      "Every day, the planet's oceans give us over half the oxygen you breathe.",
+      "You share this world with 8 billion people who can choose to be kind.",
+      "A single act of kindness can ripple outward and reach 1000+ lives.",
+      "Smiling is contagious. One grin can brighten an entire room.",
+      "Stars you see at night took years to reach you. You are made of them.",
+      "Helping others literally releases feel-good chemicals in your brain.",
+      "There are more trees on Earth than stars in the Milky Way.",
+      "Honeybees do a little happy dance to share good news with the hive.",
+      "Laughter boosts your immune system and lowers stress. Real magic!",
+      "Otters hold hands while they sleep so they don't drift apart.",
+      "Every sunrise is brand new. No two have ever looked the same.",
+      "You can learn anything. Brains keep growing your whole life.",
+      "Hugs lasting 20 seconds release a wave of calm and trust.",
+      "Somewhere right now, someone is doing something brave and good.",
+      "Kindness is a renewable resource. You can never run out.",
+      "The Earth travels 1.6 million miles around the sun each day, carrying you.",
+      "Music can sync the heartbeats of people listening together.",
+      "Gratitude rewires your brain to spot more good things.",
+      "Dogs wag their tails to the right when they're truly happy.",
+      "You woke up today with a fresh chance to make the world better.",
+      "The Green Bay Packers are the only team owned by their fans. Community wins!",
+      "Lambeau Field has sold out every game for decades. Loyalty is legendary.",
+      "The Lambeau Leap into the crowd started in 1993. Joy, shared in person!",
+      "The Packers have won more championships than any NFL team. Go Pack Go!",
+      "Cheeseheads wear foam hats with pride. Silly + happy = unbeatable.",
+      "Packers fans pass season tickets down for generations. Family tradition!",
+      "Title Town earned its name through grit and teamwork, not luck.",
+      "A 'frozen tundra' game means fans bundle up and cheer even louder.",
+      "Vince Lombardi taught that the best teams care about each other first.",
+      "When the Packers score, a whole state high-fives at once.",
+      "The Packers' green and gold has stayed true since 1919. Roots matter.",
+      "Tailgating turns strangers into friends over bratwurst and cheer.",
+      "A great quarterback knows the offensive line are the real heroes.",
+      "Packers fans believe in next season, every season. Endless hope!",
+      "Curly Lambeau started the team with $500 and a big dream.",
+      "A single farmer today feeds around 165 people. Heroes in boots!",
+      "One acre of corn can absorb tons of carbon and release fresh oxygen.",
+      "Cows have best friends and get stressed when separated. Sweet souls.",
+      "A happy hen lays better eggs. Kindness even works on chickens!",
+      "Farmers wake before the sun to feed the world. Quiet champions.",
+      "Healthy soil holds more living things than there are people on Earth.",
+      "Bees pollinate one out of every three bites of food you eat. Thank a bee!",
+      "A barn raising is neighbors building each other's dreams together.",
+      "Rain on a tin roof is nature's lullaby for a farm family.",
+      "Heirloom seeds are tiny time capsules passed down with love.",
+      "A garden teaches patience: you plant today and harvest joy later.",
+      "Pigs are smarter than dogs and love a good belly rub.",
+      "Fresh hay smells like summer and means the herd is well cared for.",
+      "Every meal on your table started with someone's hard work in a field.",
+      "Goats jump for joy when they're happy. Pure barnyard delight!",
+      "A scarecrow's real job is to make the farmer smile each morning.",
+      "Dairy cows can produce milk because farmers tend them gently, daily.",
+      "Compost turns yesterday's scraps into tomorrow's tomatoes. Magic loop!",
+      "A red barn was painted with leftover paint and love long ago.",
+      "Farm dogs herd, guard, and love their family with all their heart.",
+      "Pennsylvania means 'Penn's Woods.' Half the state is still forest!",
+      "The Liberty Bell rang for freedom in Philadelphia, Pennsylvania.",
+      "Punxsutawney Phil makes a whole nation smile every February 2nd.",
+      "Pennsylvania has more covered bridges than any other state. Cozy!",
+      "Hershey, PA smells like chocolate. The streetlights are shaped like kisses!",
+      "The first daily newspaper in America was printed in Philadelphia.",
+      "Pennsylvania's Pine Creek Gorge is called the Grand Canyon of the East.",
+      "Groundhogs, like Pennsylvania's Phil, can predict spring with a smile.",
+      "America's Declaration of Independence was signed in Pennsylvania.",
+      "Pennsylvania Dutch country is full of friendly farms and shoofly pie.",
+      "Pittsburgh has more bridges than Venice, Italy. The City of Bridges!",
+      "Pennsylvania's state animal is the white-tailed deer. Look for them at dawn!",
+      "The first piano and the first baseball stadium were built in Pennsylvania.",
+      "Wild rhododendrons bloom pink across Pennsylvania mountains each summer.",
+      "The Appalachian Trail winds 230 happy miles through Pennsylvania.",
+      "The name Kelly comes from a word meaning 'bright-headed' and 'lively.' Fitting!",
+      "A Kelly green is one of the brightest, most cheerful colors there is.",
+      "Kelly is one of the most beloved family names in the world. You're in good company!",
+      "Every Kelly adventure is better because you face it together.",
+      "The Kelly family motto could be: brave hearts, big laughs, kind hands.",
+      "A Kelly never quits. You roll again and try again, just like the dice.",
+      "Family is the best party you'll ever roll. The Kellys won that quest!",
+      "When a Kelly enters the room, the fun level goes up by +10.",
+      "The strongest castles are built on family. The Kelly keep stands tall.",
+      "Being a Kelly means you always have teammates cheering you on.",
+      "You are the newest legend in a long story of brave adventurers.",
+      "Mistakes are just XP. Every hero levels up by trying again.",
+      "Your laugh is a power-up for everyone who hears it.",
+      "A kind word is a healing potion that costs nothing to give.",
+      "The best loot in life is the people who love you.",
+      "Courage isn't never being scared. It's rolling the dice anyway.",
+      "Sharing doubles your joy and halves any worry. Math of the heart!",
+      "Today you unlocked a brand new day. What will you discover?",
+      "Curiosity is the map that leads to every great adventure.",
+      "Helping a friend up is the truest victory there is.",
+      "Rainbows appear after rain to remind us good things follow hard days.",
+      "A garden, a team, and a family all grow stronger with care.",
+      "You have everything you need to start your quest: a kind heart.",
+      "Bedtime stories are tiny adventures you carry into your dreams.",
+      "The world got a little brighter the day you arrived. True story!",
+      "Every snowflake in a Pennsylvania winter is one of a kind, just like you.",
+      "A good harvest, a Packers win, and a Kelly hug all share one secret: heart.",
+      "Even the tallest cornfield started as one small, hopeful seed.",
+      "Cheer for your team, tend your garden, love your family. That's a full life!",
+      "Roll the dice, plant the seed, hug your people. Adventure awaits, hero!"
+    ];
+    var evLines = [
+      "Hi, I'm Everly! Ready for adventure?",
+      "I rolled a natural 20 on hugs today!",
+      "The flowers say hello to you too!",
+      "Let's explore the whole world together!",
+      "Bravery +10! You've got this!",
+      "I picked a lucky lotus just for you.",
+      "Go Pack Go! Did you see that touchdown?!",
+      "I wore my Kelly green today. So bright!",
+      "Mommy says I'm a true Pennsylvania girl!",
+      "I named a baby chick on the farm today!",
+      "Did you know cows have best friends? So do I... it's you!",
+      "Let's build a barn fort and defend the kingdom!",
+      "I saved the last cookie for my party member!",
+      "Cheeseheads make the BEST hats, fight me!",
+      "I planted a seed and now I'm waiting for magic.",
+      "Pennsylvania has the cutest covered bridges!",
+      "Eldon, race you to the cornfield!",
+      "A Kelly never gives up. Roll again!",
+      "I found a four-leaf clover. Lucky us!",
+      "The Packers and the Kellys both never quit!",
+      "I gave a butterfly a name. It's Sir Flutters.",
+      "Snow day! Let's sled down the big hill!",
+      "Critical hit of kindness! Take that, grumpiness!",
+      "I helped feed the goats this morning. They jumped for joy!",
+      "Family quest party, assemble!",
+      "I'm the bravest hero in all of Penn's Woods!",
+      "Lambeau Leap! Catch me, I'm jumping!",
+      "Fresh hay smells like summer. Sniff sniff!",
+      "I rolled the dice and got a whole rainbow!",
+      "Let's go pick apples and start an adventure!",
+      "Every sunrise is a brand new quest, you know.",
+      "I love you bigger than the whole Grand Canyon of the East!",
+      "Phil the groundhog and I are best buds.",
+      "Touchdown dance! Wiggle wiggle!",
+      "Our farm is the coolest castle in the land.",
+      "I'm collecting smiles. You just gave me one!",
+      "Green and gold forever! Go Pack!",
+      "I'll share my treasure. The treasure is friendship!",
+      "Let's plant a hundred sunflowers this spring!",
+      "Being a Kelly means we're a team for life.",
+      "I high-fived a scarecrow today. He's chill.",
+      "The deer in the meadow let me say good morning!",
+      "Roll for positivity! That's my favorite spell.",
+      "I made a daisy crown for the whole party.",
+      "Pittsburgh has more bridges than Venice! Wow!",
+      "Cornfields are the best mazes ever invented.",
+      "My courage meter is maxed out today!",
+      "Eldon, let's watch the Packers and eat brats!",
+      "I tucked the baby cows in for their nap.",
+      "Kindness potion, drink up! You're the best.",
+      "I found the brightest Kelly green leaf!",
+      "Spring is coming. Phil told me so!",
+      "Let's count the stars over Pennsylvania tonight.",
+      "I scored a goal AND made a new friend!",
+      "Honeybees did a happy dance just for me!",
+      "We're the legendary Kelly adventuring party!",
+      "I love rain on the barn roof. It sings!",
+      "Cheering for the Pack with the whole family rules!",
+      "I rescued a ladybug. She joined our quest.",
+      "Heirloom seeds are tiny time capsules. So cool!",
+      "Let's roll the dice and see who does the dishes!",
+      "I planted hope and watered it with giggles.",
+      "Our family castle has the best snacks.",
+      "Go long, Eldon! I'm throwing the football!",
+      "I named all the chickens after heroes.",
+      "Pennsylvania autumn leaves are like confetti!",
+      "Group hug! +50 to the whole party!",
+      "I'm the Champion of the Cornfield today!",
+      "A Kelly hug heals all the hit points.",
+      "Let's make shoofly pie and share it!",
+      "The Packers taught me: teamwork wins!",
+      "I waved to Punxsutawney Phil. He's famous!",
+      "Every day on the farm is a new chapter.",
+      "I leveled up my kindness skill this morning!",
+      "Brats, cheese, and family. Best game day ever!",
+      "Let's herd the goats like brave knights!",
+      "I drew our whole family as a hero squad!",
+      "Lucky clover power, activate!",
+      "I gave the old oak tree a hug. It's wise.",
+      "We Kellys roll natural 20s on love!",
+      "Let's build a snow fortress this winter!",
+      "I saw my breath in the cold. I'm a dragon!",
+      "Farm chores done. Quest complete! Reward, please!",
+      "Go Pack Go echoes all the way to our farm!",
+      "I'm saving a seat for you on the adventure!",
+      "The first robin of spring landed near me!",
+      "I'm the official Kelly family cheerleader!",
+      "Pennsylvania creeks make the best skipping stones.",
+      "I planted carrots for the whole village!",
+      "Touchdown! Everybody do the happy wiggle!",
+      "Best friends are the best loot, and I found you!",
+      "Let's roll, plant, and hug. That's our day!",
+      "I named our farm 'Kelly Keep.' Sounds mighty!",
+      "Goats, giggles, and the Green Bay Pack. Perfect!",
+      "I caught a snowflake. It was one of a kind, like me!",
+      "Adventure level: maximum. Let's go, party!",
+      "I love you to the cornfields and back!",
+      "We're writing the Kelly legend, one quest at a time!",
+      "Group cheer: Go Pack, go farm, go family!",
+      "Snack break, then back to the quest. Heroes need fuel!"
+    ];
+    var elLines = [
+      "Eldon here! Let's go on a quest!",
+      "Critical hit... of kindness! POW!",
+      "I found a shiny treasure: it's YOU!",
+      "Onward, party! The map awaits!",
+      "My courage meter is FULL today!",
+      "High five! +5 to friendship!",
+      "GO PACK GO! Touchdown dance time!",
+      "I'm a true Pennsylvania farm hero!",
+      "Kelly clan, assemble the adventure party!",
+      "I drove the toy tractor through the cornfield!",
+      "Did you see the Packers win? Legendary!",
+      "I fed the pigs and they did happy zoomies!",
+      "Lambeau Leap! Watch me jump, Everly!",
+      "Cheesehead hat = +10 to awesome.",
+      "I planted a hundred seeds. Future loot!",
+      "Pennsylvania has the Grand Canyon of the East!",
+      "Everly, race you to the big red barn!",
+      "A Kelly always rolls again. Never quit!",
+      "I found a frog by the creek. New party member!",
+      "Green and gold are my favorite hero colors!",
+      "Phil the groundhog is the bravest of us all.",
+      "Snowball fort, ready for the winter raid!",
+      "Quest complete: I helped milk the cows!",
+      "Brats on the grill means it's game day!",
+      "I leveled up my farm skills today!",
+      "The Liberty Bell rang right here in PA!",
+      "Touchdown! Spike the football! Yeah!",
+      "I named the goats my royal guards.",
+      "Our family is the strongest team in the land.",
+      "I rolled the dice and got mega luck!",
+      "Let's defend Kelly Keep from the dragon... gently!",
+      "I love you more than the whole Pine Creek Gorge!",
+      "Go long! I'm throwing a Hail Mary!",
+      "Hershey smells like chocolate. I sniffed the air!",
+      "I helped Dad fix the fence. Hero work!",
+      "Bees pollinate our snacks. Thank a bee, party!",
+      "Cheering for the Pack with family is the best!",
+      "I built a tower of hay bales. Castle complete!",
+      "Heirloom seeds are like tiny time machines!",
+      "We Kellys never miss a chance to be kind.",
+      "I high-fived the scarecrow. We're allies now.",
+      "A deer winked at me in the meadow this morning!",
+      "Roll for positivity! It's my signature move!",
+      "Pittsburgh has more bridges than Venice. No way!",
+      "Cornfield maze run! Follow me, party!",
+      "My bravery stat is over 9000!",
+      "Everly, let's watch the Packers and eat cheese!",
+      "I tucked the baby chicks into their coop.",
+      "Friendship potion! Drink up, hero!",
+      "I caught the brightest Kelly green firefly!",
+      "Spring is near. Phil saw no shadow!",
+      "Let's count Pennsylvania stars from the barn roof.",
+      "I scored the winning goal AND shared the glory!",
+      "Honeybees did a dance. I joined in!",
+      "The legendary Kelly party is unstoppable!",
+      "Rain on the barn roof is our victory song.",
+      "Game day with the whole family is a 20/20 roll!",
+      "I rescued a turtle crossing the road. Side quest done!",
+      "Compost makes magic veggies. Farm wizardry!",
+      "Let's roll dice to pick tonight's adventure!",
+      "I planted courage and watered it with grit.",
+      "Kelly Keep has the best snack stash, trust me.",
+      "Football practice! Hut, hut, hike!",
+      "I named every chicken after a Packers legend.",
+      "PA autumn leaves rain down like gold coins!",
+      "Group hug! That's +50 to the whole team!",
+      "I'm the Knight of the North Forty acres!",
+      "A Kelly hug restores full hit points!",
+      "Shoofly pie quest: acquire and share!",
+      "The Packers taught me teamwork beats everything.",
+      "I saluted Punxsutawney Phil. Respect!",
+      "Every farm morning is a fresh new level.",
+      "I boosted my kindness skill before breakfast!",
+      "Brats, cheese, and cheering. Best day ever!",
+      "Herding goats is basically being a hero, right?",
+      "I drew us all as a legendary hero squad!",
+      "Four-leaf clover found! Luck for the party!",
+      "I hugged the old barn oak. It's seen a lot.",
+      "We Kellys roll natural 20s on courage!",
+      "Snow fortress engineering: complete!",
+      "I breathed out cold air. I'm an ice dragon!",
+      "Chores cleared. Adventure unlocked. Let's roll!",
+      "Go Pack Go all the way to our cornfields!",
+      "I'm saving the co-op seat just for you!",
+      "First robin of spring! Quest log updated!",
+      "I'm the Kelly family hype captain!",
+      "PA creeks have the best skipping stones, fact.",
+      "I planted pumpkins for the whole kingdom!",
+      "Touchdown! Everybody do the victory wiggle!",
+      "The best loot is teammates, and you're mine!",
+      "Roll, plant, hug. That's the Kelly daily quest!",
+      "I named our farm Kelly Keep. Sounds mighty!",
+      "Goats, giggles, and the Green Bay Pack!",
+      "I caught a one-of-a-kind snowflake, like me!",
+      "Adventure level MAX. Party, let's move out!",
+      "I love you to the Packers stadium and back!",
+      "We're writing the Kelly legend, quest by quest!",
+      "Team cheer: Go Pack, go farm, go family!",
+      "Snack break unlocked! Refuel, then back to adventuring!",
+      "I love you to the moon, the cornfield, and Lambeau Field!"
+    ];
+
+    var fact = document.getElementById('fact');
+    var die = document.getElementById('die');
+    var rollbtn = document.getElementById('rollbtn');
+    var countEl = document.getElementById('count');
+    var dots = ['d1','d2','d3','d4','d5'].map(function(id){return document.getElementById(id);});
+    var rolls = 0, busy=false, last=-1;
+
+    var pip = {
+      1:[2],2:[0,4],3:[0,2,4],4:[0,1,3,4],5:[0,1,2,3,4]
+    };
+    function showFace(n){
+      dots.forEach(function(d,i){ d.style.display = pip[n].indexOf(i)>-1 ? '' : 'none'; });
+    }
+    showFace(5);
+
+    function pick(arr){
+      var i;
+      do { i = Math.floor(Math.random()*arr.length); } while(arr.length>1 && i===last);
+      last = i; return {i:i,v:arr[i]};
+    }
+
+    function roll(){
+      if(busy) return; busy=true;
+      rolls++; countEl.textContent='Rolls: '+rolls;
+      if(!reduce){ die.classList.remove('rolling'); void die.offsetWidth; die.classList.add('rolling'); }
+      var flips=0;
+      var iv=setInterval(function(){ showFace(1+Math.floor(Math.random()*5)); flips++;
+        if(flips>=8){ clearInterval(iv);
+          var face=1+Math.floor(Math.random()*5); showFace(face);
+          var p=pick(facts);
+          fact.innerHTML='<span class="roll">⚄ Rolled '+(p.i+1)+'!</span><br>'+p.v;
+          busy=false;
+        }
+      }, reduce?20:60);
+    }
+    die.addEventListener('click',roll);
+    rollbtn.addEventListener('click',roll);
+    die.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();roll();}});
+    die.setAttribute('tabindex','0');
+
+    function setupHero(heroId, sprId, bubId, lines){
+      var hero=document.getElementById(heroId);
+      var spr=document.getElementById(sprId);
+      var bub=document.getElementById(bubId);
+      var li=-1, t;
+      hero.addEventListener('click',function(){
+        var p; do{p=Math.floor(Math.random()*lines.length);}while(lines.length>1&&p===li); li=p;
+        bub.textContent=lines[p];
+        bub.classList.add('show');
+        if(!reduce){ spr.classList.remove('pop'); void spr.offsetWidth; spr.classList.add('pop'); }
+        clearTimeout(t); t=setTimeout(function(){bub.classList.remove('show');},3200);
+      });
+    }
+    setupHero('hero-ev','spr-ev','bub-ev',evLines);
+    setupHero('hero-el','spr-el','bub-el',elLines);
+  })();
+  </script>
+</body>
+</html>
