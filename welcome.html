@@ -130,6 +130,39 @@
   .lvlup{animation:lvlup .7s steps(2) 3}
   @keyframes lvlup{0%,100%{box-shadow:inset 0 0 0 1px #1a2a6a,0 0 0 2px #ffe27a}
     50%{box-shadow:inset 0 0 0 1px #1a2a6a,0 0 0 4px #fff3b0}}
+
+  /* how-to-earn legend */
+  .howto{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;background:#0a1230;
+    border:2px solid #2a4ad0;border-radius:3px;padding:8px 10px;margin-bottom:10px}
+  .howto-row{display:flex;justify-content:space-between;align-items:center;font-size:7px;color:#bfe0ff}
+  .howto-row b{color:#ffe27a}
+  /* bigger EXP gauge */
+  .lufia-gauge.big{height:16px}
+  .lufia-sub{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-size:7px}
+  .lufia-sub span{color:#9be8ff}
+  .lufia-toward{color:#ffe27a!important}
+  .lufia-fill.flush{animation:fillflush .6s steps(2) 2}
+  @keyframes fillflush{0%,100%{filter:brightness(1)}50%{filter:brightness(1.6)}}
+
+  /* floating +EXP popups */
+  .exp-pop{position:fixed;z-index:80;font-family:'Press Start 2P',monospace;font-size:10px;
+    color:#ffe27a;text-shadow:1px 1px 0 #000,0 0 6px #ffd24a;pointer-events:none;white-space:nowrap}
+  @keyframes expfloat{0%{transform:translateY(0) scale(.8);opacity:0}
+    15%{opacity:1;transform:translateY(-6px) scale(1)}
+    100%{transform:translateY(-46px) scale(1);opacity:0}}
+  .exp-pop.newbig{font-size:11px;color:#9be8ff;text-shadow:1px 1px 0 #000,0 0 8px #5aa0f0}
+
+  /* big LEVEL UP banner */
+  .lvlup-banner{position:fixed;left:50%;top:34%;transform:translate(-50%,-50%);z-index:118;
+    pointer-events:none;text-align:center;opacity:0}
+  .lvlup-banner.show{opacity:1;animation:lvbanner 1.8s ease forwards}
+  @keyframes lvbanner{0%{opacity:0;transform:translate(-50%,-50%) scale(.6)}
+    18%{opacity:1;transform:translate(-50%,-50%) scale(1.1)}
+    30%{transform:translate(-50%,-50%) scale(1)}
+    80%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1.05)}}
+  .lvlup-banner .lvb{background:#0e1640;border:4px solid #ffe27a;box-shadow:0 0 0 3px #5aa0f0,0 0 36px 8px #ffd24aaa;
+    border-radius:4px;padding:16px 22px;font-size:13px;color:#ffe27a;letter-spacing:2px}
+  .lvlup-banner .lvb small{display:block;font-size:8px;color:#fff;margin-top:8px}
   .coll-secret{font-size:8px;text-align:center;color:var(--gold);margin:10px 0 4px;text-shadow:1px 1px 0 #000}
   .coll-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
   .btn.small{font-size:8px;padding:8px 12px}
@@ -319,54 +352,52 @@
     <div class="panel collection-panel lufia">
       <div class="questline">⚔ PARTY STATUS ⚔</div>
 
+      <div class="howto">
+        <div class="howto-row"><span>🎲 Roll dice</span><b>+2 EXP</b></div>
+        <div class="howto-row"><span>👑🏹 Tap a kid</span><b>+2 EXP</b></div>
+        <div class="howto-row"><span>✨ Find NEW one</span><b>+10 EXP</b></div>
+        <div class="howto-row"><span>☄ Catch a comet</span><b>+25 ALL</b></div>
+      </div>
+
       <div class="lufia-card" id="card-facts">
         <div class="lufia-top">
-          <span class="lufia-name">CHRONICLE</span>
+          <span class="lufia-name">📖 CHRONICLE</span>
           <span class="lufia-lv">LV <b id="lv-facts">1</b></span>
         </div>
         <div class="lufia-stat">
-          <span class="lufia-tag">HP</span>
-          <div class="lufia-gauge"><div class="lufia-fill hp" id="fill-facts"></div></div>
-          <span class="lufia-val" id="num-facts">0/0</span>
+          <div class="lufia-gauge big"><div class="lufia-fill hp" id="fill-facts"></div></div>
         </div>
-        <div class="lufia-stat">
-          <span class="lufia-tag">EXP</span>
-          <span class="lufia-exp" id="exp-facts">0</span>
-          <span class="lufia-next">NEXT <b id="next-facts">0</b></span>
+        <div class="lufia-sub">
+          <span id="bar-facts">0 / 10 EXP</span>
+          <span class="lufia-toward" id="toward-facts">10 to LV 2</span>
         </div>
       </div>
 
       <div class="lufia-card" id="card-ev">
         <div class="lufia-top">
-          <span class="lufia-name ev">EVERLY</span>
+          <span class="lufia-name ev">👑 EVERLY</span>
           <span class="lufia-lv">LV <b id="lv-ev">1</b></span>
         </div>
         <div class="lufia-stat">
-          <span class="lufia-tag">HP</span>
-          <div class="lufia-gauge"><div class="lufia-fill ev" id="fill-ev"></div></div>
-          <span class="lufia-val" id="num-ev">0/0</span>
+          <div class="lufia-gauge big"><div class="lufia-fill ev" id="fill-ev"></div></div>
         </div>
-        <div class="lufia-stat">
-          <span class="lufia-tag">EXP</span>
-          <span class="lufia-exp" id="exp-ev">0</span>
-          <span class="lufia-next">NEXT <b id="next-ev">0</b></span>
+        <div class="lufia-sub">
+          <span id="bar-ev">0 / 10 EXP</span>
+          <span class="lufia-toward" id="toward-ev">10 to LV 2</span>
         </div>
       </div>
 
       <div class="lufia-card" id="card-el">
         <div class="lufia-top">
-          <span class="lufia-name el">ELDON</span>
+          <span class="lufia-name el">🏹 ELDON</span>
           <span class="lufia-lv">LV <b id="lv-el">1</b></span>
         </div>
         <div class="lufia-stat">
-          <span class="lufia-tag">HP</span>
-          <div class="lufia-gauge"><div class="lufia-fill el" id="fill-el"></div></div>
-          <span class="lufia-val" id="num-el">0/0</span>
+          <div class="lufia-gauge big"><div class="lufia-fill el" id="fill-el"></div></div>
         </div>
-        <div class="lufia-stat">
-          <span class="lufia-tag">EXP</span>
-          <span class="lufia-exp" id="exp-el">0</span>
-          <span class="lufia-next">NEXT <b id="next-el">0</b></span>
+        <div class="lufia-sub">
+          <span id="bar-el">0 / 10 EXP</span>
+          <span class="lufia-toward" id="toward-el">10 to LV 2</span>
         </div>
       </div>
 
@@ -376,7 +407,7 @@
         <button class="btn small" id="viewcoll">📖 ITEM LOG</button>
         <button class="btn small reset" id="resetcoll">🗑 RESET</button>
       </div>
-      <div class="coll-saved">Tip: catch a shooting star for a legendary laugh! Progress saves on this device.</div>
+      <div class="coll-saved">Tip: catch a shooting star for a legendary laugh + big EXP! Progress saves on this device.</div>
     </div>
   </div>
 
@@ -394,6 +425,10 @@
       </div>
       <div class="modal-body" id="modal-body"></div>
     </div>
+  </div>
+
+  <div class="lvlup-banner" id="lvlup-banner" aria-hidden="true">
+    <div class="lvb" id="lvlup-text">⭐ LEVEL UP! ⭐</div>
   </div>
 
   <div class="legend-flash" id="legend-flash" aria-hidden="true">
@@ -1059,13 +1094,18 @@
     ];
     var totalLegends=legends.length;
 
-    /* ===== COLLECTION (localStorage) ===== */
-    var STORE_KEY='everlyEldonCollection_v2';
+    /* ===== COLLECTION + EXP/LEVELING (localStorage) ===== */
+    var STORE_KEY='everlyEldonCollection_v3';
     var collected={facts:{},ev:{},el:{},legend:{}};
     var totals={facts:facts.length,ev:evLines.length,el:elLines.length,legend:legends.length};
     var totalSecrets=0;
     [facts,evLines,elLines].forEach(function(a){a.forEach(function(s){if(isSecret(s))totalSecrets++;});});
-    var prevLv={facts:1,ev:1,el:1};
+
+    // EXP economy: each character (and the Chronicle) has exp + level. Levels 1..20.
+    var xp={facts:{exp:0,lv:1},ev:{exp:0,lv:1},el:{exp:0,lv:1}};
+    var MAX_LV=20;
+    // EXP needed to go from level L to L+1 (gentle curve, always reachable)
+    function expForLevel(L){ return 8 + (L-1)*4; }   // LV1->2 = 8, LV2->3 = 12, ...
 
     function loadCollection(){
       try{
@@ -1073,12 +1113,13 @@
         if(raw){var d=JSON.parse(raw);
           collected.facts=d.facts||{};collected.ev=d.ev||{};collected.el=d.el||{};collected.legend=d.legend||{};
           rolls=d.rolls||0;
+          if(d.xp){ ['facts','ev','el'].forEach(function(k){ if(d.xp[k]){xp[k].exp=d.xp[k].exp||0;xp[k].lv=d.xp[k].lv||1;} }); }
         }
       }catch(e){}
     }
     function saveCollection(){
       try{localStorage.setItem(STORE_KEY,JSON.stringify({
-        facts:collected.facts,ev:collected.ev,el:collected.el,legend:collected.legend,rolls:rolls
+        facts:collected.facts,ev:collected.ev,el:collected.el,legend:collected.legend,rolls:rolls,xp:xp
       }));}catch(e){}
     }
     function countFound(cat){var n=0;for(var k in collected[cat])if(collected[cat][k])n++;return n;}
@@ -1091,36 +1132,85 @@
       return n;
     }
     function pct(a,b){return b?Math.round(a/b*100):0;}
-    /* LV scales 1..10 with progress, like an old RPG. EXP = items found, NEXT = remaining. */
-    function levelFor(found,total){ return total? (1+Math.floor(found/total*9)) : 1; }
 
-    function updateCard(cat,id,found){
-      var total=totals[cat];
-      document.getElementById('fill-'+id).style.width=pct(found,total)+'%';
-      document.getElementById('num-'+id).textContent=found+'/'+total;
-      document.getElementById('exp-'+id).textContent=found;
-      document.getElementById('next-'+id).textContent=Math.max(0,total-found);
-      var lv=levelFor(found,total);
-      document.getElementById('lv-'+id).textContent=lv;
-      if(lv>prevLv[cat]){
-        prevLv[cat]=lv;
-        var card=document.getElementById('card-'+id);
-        if(!reduce){card.classList.remove('lvlup');void card.offsetWidth;card.classList.add('lvlup');}
-      } else { prevLv[cat]=lv; }
+    var charLabel={facts:'CHRONICLE',ev:'EVERLY',el:'ELDON'};
+    // Award EXP to a character; handles multi-level-ups, popups, and the banner.
+    function awardExp(cat, amount, srcEl, isNew){
+      var st=xp[cat];
+      if(st.lv>=MAX_LV){ st.exp=expForLevel(MAX_LV); renderCard(cat); return; }
+      st.exp += amount;
+      var leveled=0;
+      while(st.lv<MAX_LV && st.exp>=expForLevel(st.lv)){ st.exp-=expForLevel(st.lv); st.lv++; leveled++; }
+      if(st.lv>=MAX_LV){ st.exp=Math.min(st.exp,expForLevel(MAX_LV)); }
+      saveCollection();
+      renderCard(cat);
+      // floating popup near the source element
+      if(srcEl) expPopup(srcEl, (isNew?'NEW! +':'+')+amount+' EXP', isNew);
+      if(leveled){
+        var fill=document.getElementById('fill-'+cat);
+        if(!reduce&&fill){fill.classList.remove('flush');void fill.offsetWidth;fill.classList.add('flush');}
+        showLevelUp(charLabel[cat], st.lv);
+      }
+      updateMetaLines();
     }
-    function updateCollectionUI(){
-      var fF=countFound('facts'),fE=countFound('ev'),fL=countFound('el'),fG=countFound('legend');
-      updateCard('facts','facts',fF);
-      updateCard('ev','ev',fE);
-      updateCard('el','el',fL);
+    function awardAll(amount, srcEl){
+      ['facts','ev','el'].forEach(function(c){ awardExp(c, amount, null, false); });
+      if(srcEl) expPopup(srcEl, '+'+amount+' ALL!', true);
+    }
+
+    function renderCard(cat){
+      var st=xp[cat];
+      var need=expForLevel(st.lv);
+      var atMax=st.lv>=MAX_LV;
+      document.getElementById('lv-'+cat).textContent=st.lv;
+      document.getElementById('fill-'+cat).style.width=(atMax?100:pct(st.exp,need))+'%';
+      document.getElementById('bar-'+cat).textContent=atMax?('MAX • '+st.exp+' EXP'):(st.exp+' / '+need+' EXP');
+      document.getElementById('toward-'+cat).textContent=atMax?'★ MAX LEVEL ★':((need-st.exp)+' to LV '+(st.lv+1));
+    }
+    function updateMetaLines(){
+      var fG=countFound('legend');
       document.getElementById('coll-secret').textContent='\u2728 Secrets found: '+countSecretsFound()+'/'+totalSecrets+' \u2728';
       document.getElementById('coll-legend').textContent='\u2604 Legendary laughs caught: '+fG+'/'+totalLegends+' \u2604';
-      var allDone=(fF===totals.facts&&fE===totals.ev&&fL===totals.el&&fG===totals.legend);
-      document.querySelector('.collection-panel').classList.toggle('complete-glow',allDone);
-      if(allDone){document.querySelector('.collection-panel .questline').textContent='\uD83C\uDFC6 PARTY MAXED OUT! \uD83C\uDFC6';}
+      var maxed=(xp.facts.lv>=MAX_LV&&xp.ev.lv>=MAX_LV&&xp.el.lv>=MAX_LV);
+      document.querySelector('.collection-panel').classList.toggle('complete-glow',maxed);
+      document.querySelector('.collection-panel .questline').textContent=maxed?'\uD83C\uDFC6 PARTY MAXED OUT! \uD83C\uDFC6':'\u2694 PARTY STATUS \u2694';
     }
+    function updateCollectionUI(){
+      renderCard('facts'); renderCard('ev'); renderCard('el');
+      updateMetaLines();
+    }
+
+    // floating +EXP popup
+    function expPopup(srcEl, text, big){
+      if(reduce||!srcEl) return;
+      var r=srcEl.getBoundingClientRect();
+      var p=document.createElement('div');
+      p.className='exp-pop'+(big?' newbig':'');
+      p.textContent=text;
+      p.style.left=(r.left+r.width/2)+'px';
+      p.style.top=(r.top+8)+'px';
+      p.style.transform='translateX(-50%)';
+      p.style.animation='expfloat 1.2s ease forwards';
+      document.body.appendChild(p);
+      setTimeout(function(){p.remove();},1200);
+    }
+
+    // big LEVEL UP banner
+    var lvBanner=document.getElementById('lvlup-banner');
+    var lvBannerText=document.getElementById('lvlup-text');
+    var lvBannerTimer;
+    function showLevelUp(who, lv){
+      lvBannerText.innerHTML='\u2B50 LEVEL UP! \u2B50<small>'+who+' reached LV '+lv+'!</small>';
+      lvBanner.classList.remove('show'); void lvBanner.offsetWidth; lvBanner.classList.add('show');
+      if(!reduce) sparkleBurst(window.innerWidth/2, window.innerHeight*0.34, 30);
+      clearTimeout(lvBannerTimer);
+      lvBannerTimer=setTimeout(function(){lvBanner.classList.remove('show');},1800);
+    }
+
+    // Mark a saying/fact found. Returns true if it was NEW.
     function markFound(cat,idx){
-      if(!collected[cat][idx]){collected[cat][idx]=true;saveCollection();updateCollectionUI();}
+      if(!collected[cat][idx]){collected[cat][idx]=true;saveCollection();return true;}
+      return false;
     }
 
     var sparkColors=['#ffe27a','#fff3b0','#ffd24a','#ffffff','#ffb86a'];
@@ -1161,6 +1251,8 @@
       var idx = avail.length ? avail[Math.floor(Math.random()*avail.length)]
                              : Math.floor(Math.random()*legends.length);
       markFound('legend', idx);
+      // BIG reward: +25 EXP to the whole party
+      awardAll(25, null);
       legendText.textContent=legends[idx];
       legendFlash.classList.remove('show'); void legendFlash.offsetWidth; legendFlash.classList.add('show');
       if(!reduce) sparkleBurst(window.innerWidth/2, window.innerHeight/2, 40);
@@ -1229,7 +1321,9 @@
           var face=1+Math.floor(Math.random()*5); showFace(face);
           var p=pick(facts);
           var secret=isSecret(p.v);
-          markFound('facts',p.i);
+          var isNewFact=markFound('facts',p.i);
+          // EXP: base +2, or big +10 for discovering a new fact
+          awardExp('facts', isNewFact?10:2, rollbtn, isNewFact);
           if(secret){
             secretsFound++;
             fact.classList.add('secret');
@@ -1257,7 +1351,8 @@
       hero.addEventListener('click',function(){
         var p; do{p=Math.floor(Math.random()*lines.length);}while(lines.length>1&&p===li); li=p;
         var line=lines[p], secret=isSecret(line);
-        markFound(cat,p);
+        var isNew=markFound(cat,p);
+        awardExp(cat, isNew?10:2, hero, isNew);
         bub.textContent=clean(line);
         bub.classList.toggle('secret', secret);
         bub.classList.add('show');
@@ -1317,9 +1412,9 @@
     document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
 
     document.getElementById('resetcoll').addEventListener('click',function(){
-      if(confirm('Reset your whole collection? This cannot be undone!')){
+      if(confirm('Reset your whole collection and levels? This cannot be undone!')){
         collected={facts:{},ev:{},el:{},legend:{}}; rolls=0;
-        prevLv={facts:1,ev:1,el:1};
+        xp={facts:{exp:0,lv:1},ev:{exp:0,lv:1},el:{exp:0,lv:1}};
         countEl.textContent='Rolls: 0';
         try{localStorage.removeItem(STORE_KEY);}catch(e){}
         updateCollectionUI();
@@ -1494,75 +1589,4 @@
         '<rect x="25" y="0" width="2" height="7" fill="#8a6a3a"/>'+
         '<rect x="27" y="1" width="2" height="2" fill="#8a6a3a"/>'+
         '<rect x="23" y="2" width="2" height="2" fill="#8a6a3a"/>'},
-      lumberjack:{name:'Lumberjack',svg:
-        '<rect x="8" y="20" width="16" height="12" fill="#c03a3a"/>'+
-        '<rect x="11" y="20" width="2" height="12" fill="#2a1a1a"/>'+
-        '<rect x="17" y="20" width="2" height="12" fill="#2a1a1a"/>'+
-        '<rect x="8" y="24" width="16" height="2" fill="#2a1a1a"/>'+
-        '<rect x="8" y="28" width="16" height="2" fill="#2a1a1a"/>'+
-        '<rect x="22" y="22" width="3" height="2" fill="#9aa6b8"/>'+
-        '<rect x="23" y="24" width="2" height="6" fill="#8a5a2a"/>'+
-        '<rect x="7" y="1" width="18" height="3" fill="#e08a3a"/>'}
-    };
-
-    function applyOutfit(who){
-      var g=document.getElementById('outfit-'+who);
-      var table=(who==='ev')?outfitsEv:outfitsEl;
-      var key=(who==='ev')?wornEv:wornEl;
-      g.innerHTML=(table[key]&&table[key].svg)||'';
-    }
-
-    function buildSwatches(who, table, current, onPick){
-      var box=document.getElementById('sw-'+who);
-      box.innerHTML='';
-      Object.keys(table).forEach(function(key){
-        var o=table[key];
-        var b=document.createElement('div');
-        b.className='sw'+(key===current?' active':'');
-        b.setAttribute('role','button');
-        b.setAttribute('tabindex','0');
-        b.setAttribute('aria-label',o.name);
-        // mini preview: a tiny torso + the outfit overlay
-        b.innerHTML='<svg viewBox="0 0 32 34" shape-rendering="crispEdges">'+
-          '<rect x="11" y="4" width="10" height="9" fill="#ffd9b8"/>'+
-          '<rect x="9" y="20" width="14" height="12" fill="#5a5a6a"/>'+
-          (o.svg||'')+
-          '</svg><span class="swn">'+o.name+'</span>';
-        function pick(){
-          box.querySelectorAll('.sw').forEach(function(x){x.classList.remove('active');});
-          b.classList.add('active');
-          onPick(key);
-        }
-        b.addEventListener('click',pick);
-        b.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
-        box.appendChild(b);
-      });
-    }
-    function saveDressup(){try{localStorage.setItem(DRESS_KEY,JSON.stringify({ev:wornEv,el:wornEl}));}catch(e){}}
-    function loadDressup(){try{var d=JSON.parse(localStorage.getItem(DRESS_KEY)||'null');
-      if(d){if(outfitsEv[d.ev])wornEv=d.ev; if(outfitsEl[d.el])wornEl=d.el;}}catch(e){}}
-
-    function initDressup(){
-      loadDressup();
-      buildSwatches('ev',outfitsEv,wornEv,function(k){wornEv=k;applyOutfit('ev');saveDressup();
-        var s=document.getElementById('spr-ev');if(!reduce){s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');}});
-      buildSwatches('el',outfitsEl,wornEl,function(k){wornEl=k;applyOutfit('el');saveDressup();
-        var s=document.getElementById('spr-el');if(!reduce){s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');}});
-      applyOutfit('ev'); applyOutfit('el');
-    }
-
-    /* ===== INIT ===== */
-    loadCollection();
-    countEl.textContent='Rolls: '+rolls;
-    // sync starting levels so we don't fire level-up FX on load
-    prevLv.facts=levelFor(countFound('facts'),totals.facts);
-    prevLv.ev=levelFor(countFound('ev'),totals.ev);
-    prevLv.el=levelFor(countFound('el'),totals.el);
-    updateCollectionUI();
-    initDressup();
-    // shooting stars: first one soon, then periodically
-    if(!reduce){ setTimeout(spawnComet, 6000); scheduleComet(); }
-  })();
-  </script>
-</body>
-</html>
+      l
