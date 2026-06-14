@@ -106,21 +106,58 @@
   @media (prefers-reduced-motion:reduce){
     .star,.bob,.bob2,.blink,.rolling,.pop,.fact.secret,.panel.secret-glow,.hero.secretpop svg,.crown.show{animation:none}}
 
-  /* ===== COLLECTION ===== */
-  .collection-panel{margin-top:4px}
-  .coll-row{display:flex;align-items:center;gap:8px;margin:8px 0}
-  .coll-label{font-size:8px;min-width:64px;color:var(--accent2)}
-  .coll-bar{flex:1;height:14px;background:#0a1230;border:2px solid var(--accent);border-radius:3px;overflow:hidden}
-  .coll-fill{height:100%;width:0%;background:var(--gold);transition:width .5s ease}
-  .coll-fill.ev{background:var(--ev)} .coll-fill.el{background:var(--el)}
-  .coll-num{font-size:7px;min-width:46px;text-align:right;color:var(--accent2)}
-  .coll-secret{font-size:8px;text-align:center;color:var(--gold);margin:10px 0 12px;text-shadow:1px 1px 0 #000}
-  .coll-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  /* ===== COLLECTION (LUFIA STATUS WINDOW) ===== */
+  .collection-panel.lufia{margin-top:4px;background:#101a44;
+    border:4px solid #fff;box-shadow:inset 0 0 0 3px #2a4ad0,inset 0 0 0 5px #0c1430}
+  .lufia-card{background:#0e1640;border:2px solid #5a7af0;border-radius:3px;
+    padding:8px 10px;margin:8px 0;box-shadow:inset 0 0 0 1px #1a2a6a}
+  .lufia-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .lufia-name{font-size:9px;color:#fff;letter-spacing:1px}
+  .lufia-name.ev{color:var(--ev)} .lufia-name.el{color:var(--el)}
+  .lufia-lv{font-size:8px;color:#ffe27a}
+  .lufia-lv b{color:#fff}
+  .lufia-stat{display:flex;align-items:center;gap:8px;margin:3px 0}
+  .lufia-tag{font-size:7px;color:#9be8ff;min-width:26px}
+  .lufia-gauge{flex:1;height:11px;background:#06102e;border:1px solid #2a4ad0;border-radius:2px;overflow:hidden}
+  .lufia-fill{height:100%;width:0%;transition:width .5s ease;
+    background:linear-gradient(180deg,#9be8b0,#3fc28a)}
+  .lufia-fill.ev{background:linear-gradient(180deg,#ffc0d4,var(--ev))}
+  .lufia-fill.el{background:linear-gradient(180deg,#bfe0ff,var(--el))}
+  .lufia-val{font-size:7px;color:#fff;min-width:50px;text-align:right}
+  .lufia-exp{font-size:7px;color:#ffe27a;min-width:40px}
+  .lufia-next{font-size:7px;color:#7a9adc;margin-left:auto}
+  .lufia-next b{color:#fff}
+  .lvlup{animation:lvlup .7s steps(2) 3}
+  @keyframes lvlup{0%,100%{box-shadow:inset 0 0 0 1px #1a2a6a,0 0 0 2px #ffe27a}
+    50%{box-shadow:inset 0 0 0 1px #1a2a6a,0 0 0 4px #fff3b0}}
+  .coll-secret{font-size:8px;text-align:center;color:var(--gold);margin:10px 0 4px;text-shadow:1px 1px 0 #000}
+  .coll-controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
   .btn.small{font-size:8px;padding:8px 12px}
   .btn.reset{background:#e26a98;color:#fff}
   .btn.reset:hover{background:#f48fb1}
-  .coll-saved{font-size:6px;color:var(--accent);opacity:.7;text-align:center;margin-top:10px}
+  .coll-saved{font-size:6px;color:var(--accent2);opacity:.8;text-align:center;margin-top:10px;line-height:1.7}
   .complete-glow{animation:panelglow 1.4s steps(2) infinite}
+
+  /* ===== COMET / SHOOTING STAR ===== */
+  .comet{position:fixed;z-index:60;cursor:pointer;width:64px;height:20px;pointer-events:auto}
+  .comet .head{position:absolute;right:0;top:4px;width:12px;height:12px;background:#bfe0ff;
+    border-radius:50%;box-shadow:0 0 8px 3px #9be8ff,0 0 14px 6px #5aa0f088}
+  .comet .tail{position:absolute;right:10px;top:8px;width:54px;height:4px;
+    background:linear-gradient(270deg,#bfe0ff,#9be8ff00);border-radius:2px}
+  .comet .label{position:absolute;right:0;top:-12px;font-size:6px;color:#bfe0ff;white-space:nowrap;
+    text-shadow:0 0 4px #5aa0f0}
+  @keyframes cometfly{from{transform:translate(0,0)}to{transform:translate(var(--cdx),var(--cdy))}}
+
+  /* legendary laugh banner */
+  .legend-flash{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;
+    pointer-events:none;background:radial-gradient(circle,#5aa0f055,transparent 65%);opacity:0}
+  .legend-flash.show{opacity:1;animation:legendpulse 2.4s ease forwards}
+  @keyframes legendpulse{0%{opacity:0;transform:scale(.9)}15%{opacity:1;transform:scale(1)}
+    80%{opacity:1}100%{opacity:0;transform:scale(1.05)}}
+  .legend-card{background:#0e1640;border:4px solid #ffe27a;box-shadow:0 0 0 3px #5aa0f0,0 0 40px 10px #5aa0f0aa;
+    border-radius:4px;padding:20px 22px;max-width:340px;text-align:center}
+  .legend-card .lt{font-size:9px;color:#ffe27a;letter-spacing:2px;margin-bottom:12px}
+  .legend-card .ll{font-size:9px;color:#fff;line-height:1.9}
 
   /* ===== MODAL ===== */
   .modal-bg{position:fixed;inset:0;background:rgba(6,10,28,.86);z-index:100;
@@ -133,8 +170,8 @@
   .modal-x{background:none;border:2px solid var(--accent2);color:var(--accent2);font-family:inherit;
     font-size:10px;width:26px;height:26px;cursor:pointer;border-radius:3px}
   .modal-x:hover{background:var(--accent2);color:#0c1430}
-  .modal-tabs{display:flex;gap:6px;padding:10px 16px 0}
-  .tab{flex:1;font-family:inherit;font-size:8px;padding:9px 4px;cursor:pointer;color:var(--accent2);
+  .modal-tabs{display:flex;gap:6px;padding:10px 16px 0;flex-wrap:wrap}
+  .tab{flex:1;min-width:60px;font-family:inherit;font-size:8px;padding:9px 4px;cursor:pointer;color:var(--accent2);
     background:#0a1230;border:2px solid var(--accent);border-bottom:none;border-radius:3px 3px 0 0}
   .tab.active{background:var(--panel2);color:var(--gold)}
   .modal-body{overflow-y:auto;padding:12px 16px 18px;display:flex;flex-direction:column;gap:7px}
@@ -142,10 +179,11 @@
     background:#0e1838;color:#3a4a78}
   .ci.found{color:var(--accent2);border-color:var(--accent)}
   .ci.found.sec{color:#5a3a00;background:#fff6d0;border-color:#b8860b}
+  .ci.found.leg{color:#06204a;background:#bfe0ff;border-color:#5aa0f0}
   .ci .chk{color:var(--green);margin-right:6px}
   .ci.locked .chk{color:#3a4a78}
 
-  @media (prefers-reduced-motion:reduce){.coll-fill{transition:none}.complete-glow{animation:none}}
+  @media (prefers-reduced-motion:reduce){.lufia-fill{transition:none}.complete-glow,.lvlup,.legend-flash.show{animation:none}}
 </style>
 </head>
 <body>
@@ -253,44 +291,90 @@
       </div>
     </div>
 
-    <div class="panel collection-panel">
-      <div class="questline">📜 ADVENTURER'S COLLECTION 📜</div>
-      <div class="coll-row">
-        <span class="coll-label">🎲 Facts</span>
-        <div class="coll-bar"><div class="coll-fill" id="fill-facts"></div></div>
-        <span class="coll-num" id="num-facts">0/0</span>
+    <div class="panel collection-panel lufia">
+      <div class="questline">⚔ PARTY STATUS ⚔</div>
+
+      <div class="lufia-card" id="card-facts">
+        <div class="lufia-top">
+          <span class="lufia-name">CHRONICLE</span>
+          <span class="lufia-lv">LV <b id="lv-facts">1</b></span>
+        </div>
+        <div class="lufia-stat">
+          <span class="lufia-tag">HP</span>
+          <div class="lufia-gauge"><div class="lufia-fill hp" id="fill-facts"></div></div>
+          <span class="lufia-val" id="num-facts">0/0</span>
+        </div>
+        <div class="lufia-stat">
+          <span class="lufia-tag">EXP</span>
+          <span class="lufia-exp" id="exp-facts">0</span>
+          <span class="lufia-next">NEXT <b id="next-facts">0</b></span>
+        </div>
       </div>
-      <div class="coll-row">
-        <span class="coll-label" style="color:var(--ev)">👑 Everly</span>
-        <div class="coll-bar"><div class="coll-fill ev" id="fill-ev"></div></div>
-        <span class="coll-num" id="num-ev">0/0</span>
+
+      <div class="lufia-card" id="card-ev">
+        <div class="lufia-top">
+          <span class="lufia-name ev">EVERLY</span>
+          <span class="lufia-lv">LV <b id="lv-ev">1</b></span>
+        </div>
+        <div class="lufia-stat">
+          <span class="lufia-tag">HP</span>
+          <div class="lufia-gauge"><div class="lufia-fill ev" id="fill-ev"></div></div>
+          <span class="lufia-val" id="num-ev">0/0</span>
+        </div>
+        <div class="lufia-stat">
+          <span class="lufia-tag">EXP</span>
+          <span class="lufia-exp" id="exp-ev">0</span>
+          <span class="lufia-next">NEXT <b id="next-ev">0</b></span>
+        </div>
       </div>
-      <div class="coll-row">
-        <span class="coll-label" style="color:var(--el)">🏹 Eldon</span>
-        <div class="coll-bar"><div class="coll-fill el" id="fill-el"></div></div>
-        <span class="coll-num" id="num-el">0/0</span>
+
+      <div class="lufia-card" id="card-el">
+        <div class="lufia-top">
+          <span class="lufia-name el">ELDON</span>
+          <span class="lufia-lv">LV <b id="lv-el">1</b></span>
+        </div>
+        <div class="lufia-stat">
+          <span class="lufia-tag">HP</span>
+          <div class="lufia-gauge"><div class="lufia-fill el" id="fill-el"></div></div>
+          <span class="lufia-val" id="num-el">0/0</span>
+        </div>
+        <div class="lufia-stat">
+          <span class="lufia-tag">EXP</span>
+          <span class="lufia-exp" id="exp-el">0</span>
+          <span class="lufia-next">NEXT <b id="next-el">0</b></span>
+        </div>
       </div>
+
       <div class="coll-secret" id="coll-secret">✨ Secrets found: 0/25 ✨</div>
+      <div class="coll-secret" id="coll-legend" style="color:#9be8ff">☄ Legendary laughs caught: 0/0 ☄</div>
       <div class="coll-controls">
-        <button class="btn small" id="viewcoll">📖 VIEW COLLECTION</button>
+        <button class="btn small" id="viewcoll">📖 ITEM LOG</button>
         <button class="btn small reset" id="resetcoll">🗑 RESET</button>
       </div>
-      <div class="coll-saved">Your progress saves automatically on this device.</div>
+      <div class="coll-saved">Tip: catch a shooting star for a legendary laugh! Progress saves on this device.</div>
     </div>
   </div>
 
   <div class="modal-bg" id="modal">
     <div class="modal">
       <div class="modal-head">
-        <span id="modal-title">📖 My Collection</span>
+        <span id="modal-title">📖 Item Log</span>
         <button class="modal-x" id="modal-x" aria-label="Close">✕</button>
       </div>
       <div class="modal-tabs">
         <button class="tab active" data-tab="facts">🎲 Facts</button>
         <button class="tab" data-tab="ev">👑 Everly</button>
         <button class="tab" data-tab="el">🏹 Eldon</button>
+        <button class="tab" data-tab="legend">☄ Legend</button>
       </div>
       <div class="modal-body" id="modal-body"></div>
+    </div>
+  </div>
+
+  <div class="legend-flash" id="legend-flash" aria-hidden="true">
+    <div class="legend-card">
+      <div class="lt">☄ LEGENDARY LAUGH ☄</div>
+      <div class="ll" id="legend-text"></div>
     </div>
   </div>
 
@@ -768,25 +852,43 @@
     function isSecret(s){ return s.indexOf(SECRET)===0; }
     function clean(s){ return isSecret(s) ? s.slice(SECRET.length) : s; }
 
+    /* ===== LEGENDARY LAUGHS (caught from comets) ===== */
+    var legends=[
+      "EVERLY unleashes the Legendary Banshee Cackle: 'MWA HA HEEEEE!' Windows everywhere tremble!",
+      "ELDON lets out the Forest Warrior's Belly Laugh: 'BWAHAHA!' Even the deer chuckle along!",
+      "The whole Kelly family laughs at once. The sound echoes across all of Penn's Woods!",
+      "ELDON giggles so hard mid-poop that it becomes a LEGENDARY combo laugh. Flawless!",
+      "EVERLY laughs in pure sparkle: 'TEE HEE HEEE!' Glitter rains from the sky!",
+      "A baby snort-laugh so powerful it levels up the entire party. +999 joy!",
+      "ELDON laughs at his own fart. It's the funniest thing in the universe. To him.",
+      "EVERLY and ELDON laugh together. Co-op laughter: the rarest drop of all!",
+      "Grandpa's farm laugh joins in. Three generations of Kelly giggles unite!",
+      "The Legendary Hiccup-Laugh: ELDON can't stop. Nobody can. The forest is in stitches!",
+      "EVERLY laughs so regally it sounds like tiny royal trumpets. Fancy AND funny!",
+      "A laugh so contagious the cat, the dog, and the chickens all join in. Barnyard chorus!"
+    ];
+    var totalLegends=legends.length;
+
     /* ===== COLLECTION (localStorage) ===== */
-    var STORE_KEY='everlyEldonCollection_v1';
-    var collected={facts:{},ev:{},el:{}};
-    var totals={facts:facts.length,ev:evLines.length,el:elLines.length};
+    var STORE_KEY='everlyEldonCollection_v2';
+    var collected={facts:{},ev:{},el:{},legend:{}};
+    var totals={facts:facts.length,ev:evLines.length,el:elLines.length,legend:legends.length};
     var totalSecrets=0;
     [facts,evLines,elLines].forEach(function(a){a.forEach(function(s){if(isSecret(s))totalSecrets++;});});
+    var prevLv={facts:1,ev:1,el:1};
 
     function loadCollection(){
       try{
         var raw=localStorage.getItem(STORE_KEY);
         if(raw){var d=JSON.parse(raw);
-          collected.facts=d.facts||{};collected.ev=d.ev||{};collected.el=d.el||{};
+          collected.facts=d.facts||{};collected.ev=d.ev||{};collected.el=d.el||{};collected.legend=d.legend||{};
           rolls=d.rolls||0;
         }
       }catch(e){}
     }
     function saveCollection(){
       try{localStorage.setItem(STORE_KEY,JSON.stringify({
-        facts:collected.facts,ev:collected.ev,el:collected.el,rolls:rolls
+        facts:collected.facts,ev:collected.ev,el:collected.el,legend:collected.legend,rolls:rolls
       }));}catch(e){}
     }
     function countFound(cat){var n=0;for(var k in collected[cat])if(collected[cat][k])n++;return n;}
@@ -799,18 +901,33 @@
       return n;
     }
     function pct(a,b){return b?Math.round(a/b*100):0;}
+    /* LV scales 1..10 with progress, like an old RPG. EXP = items found, NEXT = remaining. */
+    function levelFor(found,total){ return total? (1+Math.floor(found/total*9)) : 1; }
+
+    function updateCard(cat,id,found){
+      var total=totals[cat];
+      document.getElementById('fill-'+id).style.width=pct(found,total)+'%';
+      document.getElementById('num-'+id).textContent=found+'/'+total;
+      document.getElementById('exp-'+id).textContent=found;
+      document.getElementById('next-'+id).textContent=Math.max(0,total-found);
+      var lv=levelFor(found,total);
+      document.getElementById('lv-'+id).textContent=lv;
+      if(lv>prevLv[cat]){
+        prevLv[cat]=lv;
+        var card=document.getElementById('card-'+id);
+        if(!reduce){card.classList.remove('lvlup');void card.offsetWidth;card.classList.add('lvlup');}
+      } else { prevLv[cat]=lv; }
+    }
     function updateCollectionUI(){
-      var fF=countFound('facts'),fE=countFound('ev'),fL=countFound('el');
-      document.getElementById('fill-facts').style.width=pct(fF,totals.facts)+'%';
-      document.getElementById('fill-ev').style.width=pct(fE,totals.ev)+'%';
-      document.getElementById('fill-el').style.width=pct(fL,totals.el)+'%';
-      document.getElementById('num-facts').textContent=fF+'/'+totals.facts;
-      document.getElementById('num-ev').textContent=fE+'/'+totals.ev;
-      document.getElementById('num-el').textContent=fL+'/'+totals.el;
+      var fF=countFound('facts'),fE=countFound('ev'),fL=countFound('el'),fG=countFound('legend');
+      updateCard('facts','facts',fF);
+      updateCard('ev','ev',fE);
+      updateCard('el','el',fL);
       document.getElementById('coll-secret').textContent='\u2728 Secrets found: '+countSecretsFound()+'/'+totalSecrets+' \u2728';
-      var allDone=(fF===totals.facts&&fE===totals.ev&&fL===totals.el);
+      document.getElementById('coll-legend').textContent='\u2604 Legendary laughs caught: '+fG+'/'+totalLegends+' \u2604';
+      var allDone=(fF===totals.facts&&fE===totals.ev&&fL===totals.el&&fG===totals.legend);
       document.querySelector('.collection-panel').classList.toggle('complete-glow',allDone);
-      if(allDone){document.querySelector('.collection-panel .questline').textContent='\uD83C\uDFC6 COLLECTION COMPLETE! \uD83C\uDFC6';}
+      if(allDone){document.querySelector('.collection-panel .questline').textContent='\uD83C\uDFC6 PARTY MAXED OUT! \uD83C\uDFC6';}
     }
     function markFound(cat,idx){
       if(!collected[cat][idx]){collected[cat][idx]=true;saveCollection();updateCollectionUI();}
@@ -841,6 +958,61 @@
       var r=panel.getBoundingClientRect();
       sparkleBurst(r.left+r.width/2, r.top+30, 28);
       setTimeout(function(){ panel.classList.remove('secret-glow'); }, 2600);
+    }
+
+    /* ===== COMET / SHOOTING STAR SYSTEM ===== */
+    var legendFlash=document.getElementById('legend-flash');
+    var legendText=document.getElementById('legend-text');
+    var flashTimer;
+    function catchLegend(){
+      // pick an uncaught legend if possible
+      var avail=[];
+      for(var i=0;i<legends.length;i++){ if(!collected.legend[i]) avail.push(i); }
+      var idx = avail.length ? avail[Math.floor(Math.random()*avail.length)]
+                             : Math.floor(Math.random()*legends.length);
+      markFound('legend', idx);
+      legendText.textContent=legends[idx];
+      legendFlash.classList.remove('show'); void legendFlash.offsetWidth; legendFlash.classList.add('show');
+      if(!reduce) sparkleBurst(window.innerWidth/2, window.innerHeight/2, 40);
+      clearTimeout(flashTimer);
+      flashTimer=setTimeout(function(){legendFlash.classList.remove('show');}, 2400);
+    }
+
+    function spawnComet(){
+      if(reduce) return;
+      var c=document.createElement('div');
+      c.className='comet';
+      c.innerHTML='<div class="label">catch me! \u2604</div><div class="tail"></div><div class="head"></div>';
+      // start off-screen on a random edge-ish, fly diagonally across
+      var startX = Math.random()*window.innerWidth*0.5;
+      var startY = -30 + Math.random()*60;
+      var dx = window.innerWidth*0.6 + Math.random()*window.innerWidth*0.3;
+      var dy = window.innerHeight*0.5 + Math.random()*window.innerHeight*0.3;
+      var ang = Math.atan2(dy,dx)*180/Math.PI;
+      c.style.left=startX+'px';
+      c.style.top=startY+'px';
+      c.style.setProperty('--cdx', dx+'px');
+      c.style.setProperty('--cdy', dy+'px');
+      c.style.transform='rotate('+ang+'deg)';
+      var dur = 2600 + Math.random()*1400;
+      c.style.animation='cometfly '+dur+'ms linear forwards';
+      var caught=false;
+      function grab(){
+        if(caught) return; caught=true;
+        var rect=c.getBoundingClientRect();
+        if(!reduce) sparkleBurst(rect.left+rect.width/2, rect.top+rect.height/2, 26);
+        c.remove();
+        catchLegend();
+      }
+      c.addEventListener('click',grab);
+      c.addEventListener('touchstart',function(e){e.preventDefault();grab();},{passive:false});
+      document.body.appendChild(c);
+      setTimeout(function(){ if(c.parentNode) c.remove(); }, dur+200);
+    }
+
+    function scheduleComet(){
+      var wait = 14000 + Math.random()*16000; // 14-30s between comets
+      setTimeout(function(){ spawnComet(); scheduleComet(); }, wait);
     }
 
     var pip = {
@@ -922,17 +1094,21 @@
     var modalTitle=document.getElementById('modal-title');
     var dataMap={facts:{arr:facts,cat:'facts',title:'\uD83C\uDFB2 Fact Collection'},
                  ev:{arr:evLines,cat:'ev',title:'\uD83D\uDC51 Everly\u2019s Sayings'},
-                 el:{arr:elLines,cat:'el',title:'\uD83C\uDFF9 Eldon\u2019s Sayings'}};
+                 el:{arr:elLines,cat:'el',title:'\uD83C\uDFF9 Eldon\u2019s Sayings'},
+                 legend:{arr:legends,cat:'legend',title:'\u2604 Legendary Laughs'}};
     function renderTab(tab){
       var d=dataMap[tab];
       modalTitle.textContent=d.title;
       var html='';
       for(var i=0;i<d.arr.length;i++){
         var found=!!collected[d.cat][i];
-        var sec=isSecret(d.arr[i]);
-        var cls='ci '+(found?'found':'locked')+(found&&sec?' sec':'');
+        var isLeg=(d.cat==='legend');
+        var sec=!isLeg && isSecret(d.arr[i]);
+        var cls='ci '+(found?'found':'locked')+(found&&sec?' sec':'')+(found&&isLeg?' leg':'');
         var chk=found?'\u2714':'\u2610';
-        var txt=found?(sec?'\u2728 '+clean(d.arr[i]):clean(d.arr[i])):'??? Keep playing to unlock!';
+        var lockMsg=isLeg?'??? Catch a shooting star to unlock!':'??? Keep playing to unlock!';
+        var prefix=found?(isLeg?'\u2604 ':(sec?'\u2728 ':'')):'';
+        var txt=found?(prefix+clean(d.arr[i])):lockMsg;
         html+='<div class="'+cls+'"><span class="chk">'+chk+'</span>'+txt+'</div>';
       }
       modalBody.innerHTML=html;
@@ -952,18 +1128,25 @@
 
     document.getElementById('resetcoll').addEventListener('click',function(){
       if(confirm('Reset your whole collection? This cannot be undone!')){
-        collected={facts:{},ev:{},el:{}}; rolls=0;
+        collected={facts:{},ev:{},el:{},legend:{}}; rolls=0;
+        prevLv={facts:1,ev:1,el:1};
         countEl.textContent='Rolls: 0';
         try{localStorage.removeItem(STORE_KEY);}catch(e){}
         updateCollectionUI();
-        document.querySelector('.collection-panel .questline').textContent='\uD83D\uDCDC ADVENTURER\u2019S COLLECTION \uD83D\uDCDC';
+        document.querySelector('.collection-panel .questline').textContent='\u2694 PARTY STATUS \u2694';
       }
     });
 
     /* ===== INIT ===== */
     loadCollection();
     countEl.textContent='Rolls: '+rolls;
+    // sync starting levels so we don't fire level-up FX on load
+    prevLv.facts=levelFor(countFound('facts'),totals.facts);
+    prevLv.ev=levelFor(countFound('ev'),totals.ev);
+    prevLv.el=levelFor(countFound('el'),totals.el);
     updateCollectionUI();
+    // shooting stars: first one soon, then periodically
+    if(!reduce){ setTimeout(spawnComet, 6000); scheduleComet(); }
   })();
   </script>
 </body>
