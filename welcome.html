@@ -1589,4 +1589,71 @@
         '<rect x="25" y="0" width="2" height="7" fill="#8a6a3a"/>'+
         '<rect x="27" y="1" width="2" height="2" fill="#8a6a3a"/>'+
         '<rect x="23" y="2" width="2" height="2" fill="#8a6a3a"/>'},
-      l
+      lumberjack:{name:'Lumberjack',svg:
+        '<rect x="8" y="20" width="16" height="12" fill="#c03a3a"/>'+
+        '<rect x="11" y="20" width="2" height="12" fill="#2a1a1a"/>'+
+        '<rect x="17" y="20" width="2" height="12" fill="#2a1a1a"/>'+
+        '<rect x="8" y="24" width="16" height="2" fill="#2a1a1a"/>'+
+        '<rect x="8" y="28" width="16" height="2" fill="#2a1a1a"/>'+
+        '<rect x="22" y="22" width="3" height="2" fill="#9aa6b8"/>'+
+        '<rect x="23" y="24" width="2" height="6" fill="#8a5a2a"/>'+
+        '<rect x="7" y="1" width="18" height="3" fill="#e08a3a"/>'}
+    };
+
+    function applyOutfit(who){
+      var g=document.getElementById('outfit-'+who);
+      var table=(who==='ev')?outfitsEv:outfitsEl;
+      var key=(who==='ev')?wornEv:wornEl;
+      g.innerHTML=(table[key]&&table[key].svg)||'';
+    }
+
+    function buildSwatches(who, table, current, onPick){
+      var box=document.getElementById('sw-'+who);
+      box.innerHTML='';
+      Object.keys(table).forEach(function(key){
+        var o=table[key];
+        var b=document.createElement('div');
+        b.className='sw'+(key===current?' active':'');
+        b.setAttribute('role','button');
+        b.setAttribute('tabindex','0');
+        b.setAttribute('aria-label',o.name);
+        // mini preview: a tiny torso + the outfit overlay
+        b.innerHTML='<svg viewBox="0 0 32 34" shape-rendering="crispEdges">'+
+          '<rect x="11" y="4" width="10" height="9" fill="#ffd9b8"/>'+
+          '<rect x="9" y="20" width="14" height="12" fill="#5a5a6a"/>'+
+          (o.svg||'')+
+          '</svg><span class="swn">'+o.name+'</span>';
+        function pick(){
+          box.querySelectorAll('.sw').forEach(function(x){x.classList.remove('active');});
+          b.classList.add('active');
+          onPick(key);
+        }
+        b.addEventListener('click',pick);
+        b.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();pick();}});
+        box.appendChild(b);
+      });
+    }
+    function saveDressup(){try{localStorage.setItem(DRESS_KEY,JSON.stringify({ev:wornEv,el:wornEl}));}catch(e){}}
+    function loadDressup(){try{var d=JSON.parse(localStorage.getItem(DRESS_KEY)||'null');
+      if(d){if(outfitsEv[d.ev])wornEv=d.ev; if(outfitsEl[d.el])wornEl=d.el;}}catch(e){}}
+
+    function initDressup(){
+      loadDressup();
+      buildSwatches('ev',outfitsEv,wornEv,function(k){wornEv=k;applyOutfit('ev');saveDressup();
+        var s=document.getElementById('spr-ev');if(!reduce){s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');}});
+      buildSwatches('el',outfitsEl,wornEl,function(k){wornEl=k;applyOutfit('el');saveDressup();
+        var s=document.getElementById('spr-el');if(!reduce){s.classList.remove('pop');void s.offsetWidth;s.classList.add('pop');}});
+      applyOutfit('ev'); applyOutfit('el');
+    }
+
+    /* ===== INIT ===== */
+    loadCollection();
+    countEl.textContent='Rolls: '+rolls;
+    updateCollectionUI();
+    initDressup();
+    // shooting stars: first one soon, then periodically
+    if(!reduce){ setTimeout(spawnComet, 6000); scheduleComet(); }
+  })();
+  </script>
+</body>
+</html>
