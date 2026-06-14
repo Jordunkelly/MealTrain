@@ -149,20 +149,6 @@
   .sw svg{width:32px;height:32px;image-rendering:pixelated}
   .sw .swn{font-size:5px;color:#9be8ff;text-align:center;line-height:1.3}
 
-  /* ===== PET PANEL ===== */
-  .pet-stage{display:flex;align-items:center;gap:14px;background:#0e1640;border:2px solid #5a7af0;
-    border-radius:3px;padding:10px 12px;box-shadow:inset 0 0 0 1px #1a2a6a}
-  .pet-sprite{width:64px;min-width:64px;height:64px;display:flex;align-items:center;justify-content:center;cursor:pointer}
-  .pet-sprite svg{width:60px;height:60px;image-rendering:pixelated}
-  .pet-info{flex:1;display:flex;flex-direction:column;gap:5px}
-  .pet-name{font-size:9px;color:#fff;letter-spacing:1px}
-  .pet-mood{font-size:7px;color:#9be8ff;line-height:1.6}
-  .pet-controls{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
-  .pet-bounce{animation:petbounce .5s ease}
-  @keyframes petbounce{0%{transform:scale(1)}40%{transform:scale(1.18) translateY(-4px)}100%{transform:scale(1)}}
-  .pet-hatch{animation:pethatch .8s ease}
-  @keyframes pethatch{0%{transform:scale(.6) rotate(-10deg)}50%{transform:scale(1.2) rotate(10deg)}100%{transform:scale(1)}}
-
   /* ===== COMET / SHOOTING STAR ===== */
   .comet{position:fixed;z-index:60;cursor:pointer;width:64px;height:20px;pointer-events:auto}
   .comet .head{position:absolute;right:0;top:4px;width:12px;height:12px;background:#bfe0ff;
@@ -309,24 +295,6 @@
         <div class="dress-who" style="color:var(--el)">🏹 ELDON</div>
         <div class="swatches" id="sw-el"></div>
       </div>
-    </div>
-
-    <div class="panel pet-panel">
-      <div class="questline">🥚 PARTY PET 🥚</div>
-      <div class="pet-stage" id="pet-stage">
-        <div class="pet-sprite" id="pet-sprite"></div>
-        <div class="pet-info">
-          <div class="pet-name" id="pet-name">??? </div>
-          <div class="lufia-stat">
-            <span class="lufia-tag">LV</span>
-            <span class="lufia-exp" id="pet-lv">1</span>
-            <span class="lufia-tag">XP</span>
-            <div class="lufia-gauge"><div class="lufia-fill" id="pet-xpfill" style="background:linear-gradient(180deg,#9be8ff,#5aa0f0)"></div></div>
-          </div>
-          <div class="pet-mood" id="pet-mood">Tap the egg to begin!</div>
-        </div>
-      </div>
-      <div class="pet-controls" id="pet-controls"></div>
     </div>
 
     <div class="panel">
@@ -1404,7 +1372,49 @@
         '<rect x="14" y="0" width="4" height="2" fill="#ffe27a"/>'+
         '<rect x="12" y="2" width="8" height="2" fill="#7a3a9a"/>'+
         '<rect x="10" y="4" width="12" height="2" fill="#7a3a9a"/>'+
-        '<rect x="8" y="6" width="16" height="2" fill="#7a3a9a"/>'}
+        '<rect x="8" y="6" width="16" height="2" fill="#7a3a9a"/>'},
+      warrior:{name:'War Princess',svg:
+        '<rect x="8" y="20" width="16" height="12" fill="#d04a7a"/>'+
+        '<rect x="8" y="20" width="16" height="2" fill="#ffd24a"/>'+
+        '<rect x="7" y="20" width="3" height="5" fill="#ffd24a"/>'+
+        '<rect x="22" y="20" width="3" height="5" fill="#ffd24a"/>'+
+        '<rect x="14" y="23" width="4" height="7" fill="#ffd24a"/>'+
+        '<rect x="9" y="1" width="14" height="3" fill="#ffd24a"/>'+
+        '<rect x="11" y="0" width="2" height="2" fill="#ff5a7a"/>'+
+        '<rect x="15" y="0" width="2" height="2" fill="#5aa0f0"/>'+
+        '<rect x="19" y="0" width="2" height="2" fill="#ff5a7a"/>'+
+        '<rect x="26" y="18" width="4" height="2" fill="#cfd8e0"/>'+
+        '<rect x="28" y="14" width="2" height="6" fill="#cfd8e0"/>'},
+      fairy:{name:'Fairy',svg:
+        '<rect x="9" y="20" width="14" height="12" fill="#9be8c0"/>'+
+        '<rect x="9" y="20" width="14" height="2" fill="#d0ffe8"/>'+
+        '<rect x="12" y="24" width="2" height="2" fill="#ffe27a"/>'+
+        '<rect x="18" y="24" width="2" height="2" fill="#ffe27a"/>'+
+        '<rect x="3" y="19" width="5" height="8" fill="#bfffe0"/>'+
+        '<rect x="24" y="19" width="5" height="8" fill="#bfffe0"/>'+
+        '<rect x="13" y="0" width="6" height="2" fill="#ffe27a"/>'+
+        '<rect x="15" y="2" width="2" height="2" fill="#ffe27a"/>'},
+      tutu:{name:'Ballerina',svg:
+        '<rect x="6" y="24" width="20" height="6" fill="#ffc0e0"/>'+
+        '<rect x="6" y="24" width="20" height="2" fill="#fff"/>'+
+        '<rect x="10" y="20" width="12" height="5" fill="#ff9ad0"/>'+
+        '<rect x="13" y="20" width="6" height="2" fill="#fff"/>'+
+        '<rect x="13" y="2" width="6" height="2" fill="#ff9ad0"/>'},
+      cupcake:{name:'Cupcake',svg:
+        '<rect x="8" y="22" width="16" height="10" fill="#fff0d0"/>'+
+        '<rect x="8" y="22" width="16" height="2" fill="#ffd9b8"/>'+
+        '<rect x="9" y="25" width="14" height="2" fill="#f4a0c0"/>'+
+        '<rect x="9" y="29" width="14" height="2" fill="#f4a0c0"/>'+
+        '<rect x="10" y="18" width="12" height="4" fill="#ffb0d4"/>'+
+        '<rect x="14" y="0" width="4" height="4" fill="#ff5a7a"/>'+
+        '<rect x="15" y="0" width="2" height="2" fill="#fff"/>'},
+      pumpkin:{name:'Lil Pumpkin',svg:
+        '<rect x="7" y="20" width="18" height="13" fill="#f08a3a"/>'+
+        '<rect x="11" y="20" width="2" height="13" fill="#d06a1a"/>'+
+        '<rect x="16" y="20" width="2" height="13" fill="#d06a1a"/>'+
+        '<rect x="21" y="20" width="2" height="13" fill="#d06a1a"/>'+
+        '<rect x="14" y="0" width="4" height="3" fill="#5aa05a"/>'+
+        '<rect x="13" y="3" width="2" height="2" fill="#3a7a3a"/>'}
     };
     var outfitsEl={
       hunter:{name:'Hunter',svg:''}, // default overalls look
@@ -1454,7 +1464,45 @@
         '<rect x="8" y="24" width="16" height="2" fill="#2a4aa0"/>'+
         '<rect x="14" y="26" width="4" height="3" fill="#c89a4a"/>'+
         '<rect x="6" y="0" width="20" height="3" fill="#c89a4a"/>'+
-        '<rect x="9" y="2" width="14" height="3" fill="#c89a4a"/>'}
+        '<rect x="9" y="2" width="14" height="3" fill="#c89a4a"/>'},
+      archer:{name:'Archer',svg:
+        '<rect x="8" y="20" width="16" height="12" fill="#3a6a3a"/>'+
+        '<rect x="8" y="20" width="16" height="2" fill="#5a8a4a"/>'+
+        '<rect x="10" y="22" width="12" height="2" fill="#6a4a2a"/>'+
+        '<rect x="14" y="24" width="4" height="6" fill="#2a4a2a"/>'+
+        '<rect x="3" y="8" width="2" height="18" fill="#8a5a2a"/>'+
+        '<rect x="4" y="7" width="2" height="2" fill="#8a5a2a"/>'+
+        '<rect x="4" y="25" width="2" height="2" fill="#8a5a2a"/>'+
+        '<rect x="5" y="9" width="1" height="16" fill="#cfd8e0"/>'+
+        '<rect x="6" y="16" width="14" height="1" fill="#6a4a2a"/>'+
+        '<polygon points="20,14 24,16.5 20,19" fill="#ffe27a"/>'},
+      ranger:{name:'Ranger',svg:
+        '<rect x="8" y="20" width="16" height="12" fill="#4a5a3a"/>'+
+        '<rect x="8" y="20" width="16" height="2" fill="#6a7a4a"/>'+
+        '<rect x="8" y="25" width="16" height="2" fill="#3a2a1a"/>'+
+        '<rect x="14" y="25" width="4" height="2" fill="#ffd24a"/>'+
+        '<rect x="6" y="0" width="20" height="2" fill="#3a5a2a"/>'+
+        '<rect x="9" y="2" width="14" height="3" fill="#4a6a3a"/>'+
+        '<rect x="20" y="1" width="3" height="2" fill="#8a5a2a"/>'},
+      antlers:{name:'Antler Scout',svg:
+        '<rect x="9" y="20" width="14" height="12" fill="#8a6a4a"/>'+
+        '<rect x="9" y="20" width="14" height="2" fill="#a88a6a"/>'+
+        '<rect x="13" y="23" width="6" height="3" fill="#fff"/>'+
+        '<rect x="5" y="0" width="2" height="7" fill="#8a6a3a"/>'+
+        '<rect x="3" y="1" width="2" height="2" fill="#8a6a3a"/>'+
+        '<rect x="7" y="2" width="2" height="2" fill="#8a6a3a"/>'+
+        '<rect x="25" y="0" width="2" height="7" fill="#8a6a3a"/>'+
+        '<rect x="27" y="1" width="2" height="2" fill="#8a6a3a"/>'+
+        '<rect x="23" y="2" width="2" height="2" fill="#8a6a3a"/>'},
+      lumberjack:{name:'Lumberjack',svg:
+        '<rect x="8" y="20" width="16" height="12" fill="#c03a3a"/>'+
+        '<rect x="11" y="20" width="2" height="12" fill="#2a1a1a"/>'+
+        '<rect x="17" y="20" width="2" height="12" fill="#2a1a1a"/>'+
+        '<rect x="8" y="24" width="16" height="2" fill="#2a1a1a"/>'+
+        '<rect x="8" y="28" width="16" height="2" fill="#2a1a1a"/>'+
+        '<rect x="22" y="22" width="3" height="2" fill="#9aa6b8"/>'+
+        '<rect x="23" y="24" width="2" height="6" fill="#8a5a2a"/>'+
+        '<rect x="7" y="1" width="18" height="3" fill="#e08a3a"/>'}
     };
 
     function applyOutfit(who){
@@ -1503,131 +1551,6 @@
       applyOutfit('ev'); applyOutfit('el');
     }
 
-    /* ===== PARTY PET ===== */
-    var PET_KEY='everlyEldonPet_v1';
-    var pet={hatched:false,name:'',type:null,xp:0,lv:1};
-    var petTypes={
-      dragon:{name:'Lightning Whelp',color:'#5a9ad0',accent:'#bfe0ff'},
-      fawn:{name:'Forest Fawn',color:'#c89a5a',accent:'#fff'},
-      pup:{name:'Farm Pup',color:'#caa86a',accent:'#fff'}
-    };
-    var petMoods=['is wagging happily!','wants a snack!','did a little dance!','loves you lots!',
-      'is napping... zzz','found a shiny acorn!','squeaks with joy!','is ready for adventure!',
-      'rolled in the hay!','gives you a tiny high-five!'];
-
-    function petXpNeeded(lv){return lv*5;}
-    function petStage(){ if(!pet.hatched) return 'egg'; return pet.lv<3?'baby':(pet.lv<6?'teen':'adult'); }
-
-    function petSvg(){
-      var stage=petStage();
-      if(stage==='egg'){
-        return '<svg viewBox="0 0 24 28" shape-rendering="crispEdges">'+
-          '<rect x="8" y="2" width="8" height="3" fill="#fff6d0"/>'+
-          '<rect x="6" y="5" width="12" height="4" fill="#ffe9a8"/>'+
-          '<rect x="4" y="9" width="16" height="10" fill="#ffd98a"/>'+
-          '<rect x="4" y="19" width="16" height="5" fill="#f0b85a"/>'+
-          '<rect x="8" y="11" width="3" height="3" fill="#fff6d0"/>'+
-          '<rect x="13" y="14" width="3" height="3" fill="#fff6d0"/>'+
-          '<rect x="6" y="24" width="12" height="2" fill="#c89a4a"/></svg>';
-      }
-      var t=petTypes[pet.type]||petTypes.dragon;
-      var c=t.color, a=t.accent;
-      var size=stage==='baby'?0:(stage==='teen'?2:4); // grow a bit
-      // simple critter that grows
-      var body='<svg viewBox="0 0 28 28" shape-rendering="crispEdges">';
-      if(pet.type==='dragon'){
-        body+='<rect x="'+(9-size/2)+'" y="'+(10-size/2)+'" width="'+(10+size)+'" height="'+(9+size)+'" fill="'+c+'"/>';
-        body+='<rect x="11" y="6" width="6" height="5" fill="'+c+'"/>';
-        body+='<rect x="10" y="4" width="2" height="3" fill="'+a+'"/><rect x="16" y="4" width="2" height="3" fill="'+a+'"/>';
-        body+='<rect x="12" y="8" width="2" height="2" fill="#1a2a3a" class="blink"/><rect x="15" y="8" width="2" height="2" fill="#1a2a3a" class="blink"/>';
-        body+='<rect x="6" y="12" width="3" height="5" fill="'+c+'"/><rect x="19" y="12" width="3" height="5" fill="'+c+'"/>';
-        body+='<rect x="8" y="'+(19+size)+'" width="3" height="4" fill="'+c+'"/><rect x="15" y="'+(19+size)+'" width="3" height="4" fill="'+c+'"/>';
-        body+='<rect x="18" y="14" width="4" height="2" fill="'+a+'"/>';
-      } else if(pet.type==='fawn'){
-        body+='<rect x="'+(9-size/2)+'" y="'+(11-size/2)+'" width="'+(10+size)+'" height="'+(8+size)+'" fill="'+c+'"/>';
-        body+='<rect x="11" y="6" width="6" height="6" fill="'+c+'"/>';
-        body+='<rect x="9" y="5" width="2" height="3" fill="'+c+'"/><rect x="17" y="5" width="2" height="3" fill="'+c+'"/>';
-        body+='<rect x="12" y="8" width="2" height="2" fill="#2a1a0a" class="blink"/><rect x="15" y="8" width="2" height="2" fill="#2a1a0a" class="blink"/>';
-        body+='<rect x="13" y="11" width="3" height="2" fill="#fff"/>';
-        body+='<rect x="9" y="'+(19+size)+'" width="2" height="4" fill="'+c+'"/><rect x="17" y="'+(19+size)+'" width="2" height="4" fill="'+c+'"/>';
-        body+='<rect x="11" y="13" width="2" height="2" fill="#fff"/><rect x="16" y="15" width="2" height="2" fill="#fff"/>';
-      } else {
-        body+='<rect x="'+(9-size/2)+'" y="'+(11-size/2)+'" width="'+(10+size)+'" height="'+(8+size)+'" fill="'+c+'"/>';
-        body+='<rect x="11" y="6" width="6" height="6" fill="'+c+'"/>';
-        body+='<rect x="9" y="6" width="3" height="4" fill="#8a6a4a"/><rect x="16" y="6" width="3" height="4" fill="#8a6a4a"/>';
-        body+='<rect x="12" y="8" width="2" height="2" fill="#2a1a0a" class="blink"/><rect x="15" y="8" width="2" height="2" fill="#2a1a0a" class="blink"/>';
-        body+='<rect x="13" y="10" width="2" height="2" fill="#3a2a1a"/>';
-        body+='<rect x="9" y="'+(19+size)+'" width="2" height="4" fill="'+c+'"/><rect x="17" y="'+(19+size)+'" width="2" height="4" fill="'+c+'"/>';
-        body+='<rect x="19" y="13" width="4" height="2" fill="'+c+'"/>';
-      }
-      body+='</svg>';
-      return body;
-    }
-
-    function renderPet(){
-      var spriteEl=document.getElementById('pet-sprite');
-      var nameEl=document.getElementById('pet-name');
-      var moodEl=document.getElementById('pet-mood');
-      var lvEl=document.getElementById('pet-lv');
-      var xpfill=document.getElementById('pet-xpfill');
-      var controls=document.getElementById('pet-controls');
-      spriteEl.innerHTML=petSvg();
-      if(!pet.hatched){
-        nameEl.textContent='Mystery Egg';
-        moodEl.textContent='Tap the egg to hatch your companion!';
-        lvEl.textContent='1';
-        xpfill.style.width='0%';
-        controls.innerHTML='<button class="btn small" id="hatchbtn">🥚 HATCH EGG</button>';
-        document.getElementById('hatchbtn').addEventListener('click',hatchEgg);
-      } else {
-        nameEl.textContent=pet.name+' ('+ (petTypes[pet.type]||{}).name +')';
-        lvEl.textContent=pet.lv;
-        var need=petXpNeeded(pet.lv);
-        xpfill.style.width=Math.min(100,Math.round(pet.xp/need*100))+'%';
-        controls.innerHTML='<button class="btn small" id="feedbtn">🍎 FEED</button>'+
-          '<button class="btn small" id="petbtn">💗 PET</button>'+
-          '<button class="btn small" id="renamebtn">✏ NAME</button>';
-        document.getElementById('feedbtn').addEventListener('click',function(){petGain(2,'munches happily! Yum!');});
-        document.getElementById('petbtn').addEventListener('click',function(){petGain(1,petMoods[Math.floor(Math.random()*petMoods.length)]);});
-        document.getElementById('renamebtn').addEventListener('click',renamePet);
-      }
-    }
-    function petBounce(){var s=document.getElementById('pet-sprite');if(!reduce){s.classList.remove('pet-bounce');void s.offsetWidth;s.classList.add('pet-bounce');}}
-    function hatchEgg(){
-      var keys=Object.keys(petTypes);
-      pet.type=keys[Math.floor(Math.random()*keys.length)];
-      pet.hatched=true; pet.lv=1; pet.xp=0;
-      pet.name=prompt('Your '+petTypes[pet.type].name+' hatched! Name your pet:','Buddy')||petTypes[pet.type].name;
-      savePet(); renderPet();
-      var s=document.getElementById('pet-sprite');if(!reduce){s.classList.remove('pet-hatch');void s.offsetWidth;s.classList.add('pet-hatch');}
-      var r=s.getBoundingClientRect(); if(!reduce) sparkleBurst(r.left+r.width/2,r.top+r.height/2,26);
-      document.getElementById('pet-mood').textContent=pet.name+' is born! Feed and pet to help it grow!';
-    }
-    function renamePet(){var n=prompt('Rename your pet:',pet.name);if(n){pet.name=n.slice(0,16);savePet();renderPet();}}
-    function petGain(amt,mood){
-      pet.xp+=amt; petBounce();
-      var leveled=false;
-      while(pet.xp>=petXpNeeded(pet.lv) && pet.lv<10){ pet.xp-=petXpNeeded(pet.lv); pet.lv++; leveled=true; }
-      savePet(); renderPet();
-      var moodEl=document.getElementById('pet-mood');
-      if(leveled){
-        moodEl.textContent=pet.name+' grew to LV '+pet.lv+'! 🎉';
-        var s=document.getElementById('pet-sprite');var r=s.getBoundingClientRect();
-        if(!reduce) sparkleBurst(r.left+r.width/2,r.top+r.height/2,20);
-      } else {
-        moodEl.textContent=pet.name+' '+mood;
-      }
-    }
-    function savePet(){try{localStorage.setItem(PET_KEY,JSON.stringify(pet));}catch(e){}}
-    function loadPet(){try{var d=JSON.parse(localStorage.getItem(PET_KEY)||'null');if(d&&typeof d==='object'){pet=d;}}catch(e){}}
-    function initPet(){
-      loadPet(); renderPet();
-      document.getElementById('pet-sprite').addEventListener('click',function(){
-        if(!pet.hatched){hatchEgg();}
-        else{petGain(1,petMoods[Math.floor(Math.random()*petMoods.length)]);}
-      });
-    }
-
     /* ===== INIT ===== */
     loadCollection();
     countEl.textContent='Rolls: '+rolls;
@@ -1637,7 +1560,6 @@
     prevLv.el=levelFor(countFound('el'),totals.el);
     updateCollectionUI();
     initDressup();
-    initPet();
     // shooting stars: first one soon, then periodically
     if(!reduce){ setTimeout(spawnComet, 6000); scheduleComet(); }
   })();
